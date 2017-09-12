@@ -1,0 +1,67 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 16, 2016, 3:48:08 PM
+    Author     : user
+*/
+
+/*to set edit link color*/
+.anchor_edit{
+    color:blue
+}
+/*to set delete link color*/
+.anchor_delete{
+    color:red
+}
+/*to set table column width*/
+.table_col_width{
+    min-width:30%;
+    width:auto;
+    text-align: center;
+}
+/*to set edit and delete column width*/
+.table_anchor_width{
+    min-width:1%;
+    width:80px;
+    text-align: center;
+}
+/*to set serial number width column width*/
+.sno_width{
+    min-width:1%;
+    width:50px;
+    text-align: center;
+}
+/*to set button width*/
+.bn{
+    width:75px
+}
+.mr5{
+    width:75px
+}
+/*to set panel heading fonts*/
+.panel_font{
+    font-weight:bold;
+    font-size:15px;
+}
+
+.table_body{
+    cursor:pointer
+}
+/*to align table content to center*/
+tr{
+    text-align:center
+}
+th{
+    text-align:center
+}
+/* to align head list in the div */
+#formula_head_table{
+    max-height:280px;
+
+}
+#textpanelpanelRow{
+    max-height:100px;
+}

@@ -1,0 +1,35 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 12, 2016, 11:14:47 AM
+    Author     : user
+*/
+
+.btn-link{
+    /*font-weight: 400;*/
+    color: #0044cc;
+    cursor: pointer;
+    border-radius:0;
+    font-size:13px;
+}
+#btn-btn-delete{
+    color: #ff0000;
+    cursor: pointer;
+    border-radius: 0;
+    font-size:13px;
+}
+.dataTables_empty{
+    color: red!important;
+}
+
+#plugin {
+position: relative;
+padding-bottom: 56.25%; /* 16/9 ratio */
+padding-top: 30px; /* IE6 workaround*/
+height: 0;
+overflow: hidden;
+}
+
