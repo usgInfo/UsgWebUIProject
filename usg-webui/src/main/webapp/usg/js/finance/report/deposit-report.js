@@ -81,7 +81,7 @@ function dayWiseDetailRowForDepositBook(DivId)
     $("#dayWiseDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="fundTypeerr"><label for="">Fund Type </label><select class="form-control" name="chequeBankName" id="fundType"></select>'
             + '</div><div class="form-group col-lg-6" id="budgetHeaderr"><label for="location">Budget Head  </label><select class="form-control" name="chequeBankName" id="budgetHead"></select></div></div>');
 
-    $("#dayWiseDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="ledgererr"><label for="">Ledger <span class="require">*</span> </label><select class="form-control" name="chequeBankName" id="ledger"></select>'
+    $("#dayWiseDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="ledgererr"><label for="">Ledger </label><select class="form-control" name="chequeBankName" id="ledger"></select>'
             + '</div><div class="form-group col-lg-6" id="grouperr"><label for="location"></label><select class="form-control" name="chequeBankName" id="groupId" onchange=fetchLedgerForBankBook("", "ledger")></select></div></div>');
 
     $('#groupId').hide();
@@ -160,7 +160,7 @@ function betweenDaysDetailRowForDepositBook(DivId)
     $("#dayWiseDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="fundTypeerr"><label for="">Fund Type </label><select class="form-control" name="chequeBankName" id="fundType"></select>'
             + '</div><div class="form-group col-lg-6" id="budgetHeaderr"><label for="location">Budget Head  </label><select class="form-control" name="chequeBankName" id="budgetHead"></select></div></div>');
 
-    $("#dayWiseDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="ledgererr"><label for="">Ledger <span class="require">*</span> </label><select class="form-control" name="chequeBankName" id="ledger"></select>'
+    $("#dayWiseDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="ledgererr"><label for="">Ledger </label><select class="form-control" name="chequeBankName" id="ledger"></select>'
             + '</div><div class="form-group col-lg-6" id="grouperr"><label for="location"></label><select class="form-control" name="chequeBankName" id="groupId" onchange=fetchLedgerForBankBook("", "ledger")></select></div></div>');
 
     $('#groupId').hide();
@@ -193,7 +193,7 @@ function validateDateWiseDetailsForDepositReport()
     var budgetHead = $("#budgetHead").val();
     var date = $("#date").val();
     var ledger = $("#ledger").val();
-    if (ddo == "" || ddo == "undefined" || location == "" || location == "undefined" || ledger == "" || ledger == "undefined" || ledger == null || date == "" || date == "undefined" || date == null) {
+    if (ddo == "" || ddo == "undefined" || location == "" || location == "undefined" || date == "" || date == "undefined" || date == null) {
         $("#depositReportListMessageDiv").text("").append("<center><div class='col-sm-12' id='errorMessage' style='color:red;'><strong>Please Fill * fields<strong></div></center>");
         return false;
     } else
@@ -208,6 +208,7 @@ function viewDateWiseDetailsForDepositReport()
     var fromyear = getFincialYearForAllReports();
     var toyear = parseInt(fromyear) + 1;
     var financialyear = fromyear + "-" + toyear;
+    var currentYear = fromyear;
     var depositReportSearchJSON = {
         date: $("date").val(),
         DDO: $("#ddo").val(),
@@ -219,7 +220,7 @@ function viewDateWiseDetailsForDepositReport()
 
     var date = $("#date").val();
     var ledger = encodeURIComponent($("#ledger").val());
-    $("#depositReportListListMainMenu").text("").append("<iframe id='iframe'  src=" + server_base_url + '/Finance/FinanceReports/DateWiseDepositReport/DepositReport?date=' + date + '&fin=' + encodeURI(financialyear) + '&ledger=' + ledger + '&voucherList=' + encodeURIComponent(JSON.stringify(depositReportSearchJSON)) + " height='500px' width='100%'></iframe>");
+    $("#depositReportListListMainMenu").text("").append("<iframe id='iframe'  src=" + server_base_url + '/Finance/FinanceReports/DateWiseDepositReport/DepositReport?date=' + date + '&fin=' + encodeURI(financialyear) + '&currentYear=' + currentYear + '&ledger=' + ledger + '&voucherList=' + encodeURIComponent(JSON.stringify(depositReportSearchJSON)) + " height='500px' width='100%'></iframe>");
 }
 
 function resetDateWiseDetailsForDepositReport()
@@ -244,7 +245,7 @@ function validateBetweenDatesDetailsForDepositReport()
     var toDate = $("#toDate").val();
     var result = 1;
     var days = checkFromDateAndToDateBankBookReport();
-    if (ddo == "" || ddo == "undefined" || location == "" || location == "undefined" || ledger == "" || ledger == "undefined" || ledger == null || fromDate == "" || fromDate == "undefined" || fromDate == null || toDate == "" || toDate == "undefined" || toDate == null) {
+    if (ddo == "" || ddo == "undefined" || location == "" || location == "undefined" || fromDate == "" || fromDate == "undefined" || fromDate == null || toDate == "" || toDate == "undefined" || toDate == null) {
         $("#depositReportListMessageDiv").text("").append("<center><div class='col-sm-12' id='errorMessage' style='color:red;'><strong>Please Fill * fields<strong></div></center>");
         return false;
     } else
@@ -267,6 +268,7 @@ function viewBetweendatesDetailsForDepositReport()
     var fromyear = getFincialYearForAllReports();
     var toyear = parseInt(fromyear) + 1;
     var financialyear = fromyear + "-" + toyear;
+    var currentYear = fromyear;
     var depositReportSearchJSON = {
         fromDate: $("fromDate").val(),
         toDate: $("toDate").val(),
@@ -279,7 +281,7 @@ function viewBetweendatesDetailsForDepositReport()
     var ledger = $("#ledger").val();
     var fromDate = $("#fromDate").val();
     var toDate = $("#toDate").val();
-    $("#depositReportListListMainMenu").text("").append("<iframe id='iframe'  src=" + server_base_url + '/Finance/FinanceReports/BetweenDatesDepositReport/DepositReport?fromDate=' + fromDate + '&toDate=' + toDate + '&fin=' + encodeURI(financialyear) + '&ledger=' + ledger + '&voucherList=' + encodeURIComponent(JSON.stringify(depositReportSearchJSON)) + " height='500px' width='100%'></iframe>");
+    $("#depositReportListListMainMenu").text("").append("<iframe id='iframe'  src=" + server_base_url + '/Finance/FinanceReports/BetweenDatesDepositReport/DepositReport?fromDate=' + fromDate + '&toDate=' + toDate + '&fin=' + encodeURI(financialyear) + '&currentYear=' + currentYear + '&ledger=' + ledger + '&voucherList=' + encodeURIComponent(JSON.stringify(depositReportSearchJSON)) + " height='500px' width='100%'></iframe>");
 }
 
 function resetBetweenDatesDetailsForDepositReport()

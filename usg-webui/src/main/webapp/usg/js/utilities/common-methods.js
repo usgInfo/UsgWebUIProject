@@ -236,7 +236,7 @@ function getLabel_InputWithSpan(labelName, required, inputId, placeholdermsg, st
     if (required == "required") {
         label_Input_Str = '<label class="control-label">' + labelName + '<span class="require"> *</span></label><div class="bankname" /><input type="text" class="form-control"  id="' + inputId + '" placeholder="' + placeholdermsg + '" ' + str + '><span id="' + inputIdErr + '"></span>';
     } else {
-        label_Input_Str = '<label class="control-label">' + labelName + '</label><div  class="bankname" /><input class="form-control" type="text"  id="' + inputId + '" placeholder="' + placeholdermsg + '" ' + str + ' maxlength=30><span id="' + inputIdErr + '"></span>';
+        label_Input_Str = '<label class="control-label">' + labelName + '</label><div  class="bankname" /><input class="form-control" type="text"  id="' + inputId + '" placeholder="' + placeholdermsg + '" ' + str + ' ><span id="' + inputIdErr + '"></span>';
     }
     return label_Input_Str
 }

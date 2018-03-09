@@ -240,11 +240,11 @@ function getNatureType() {
 
     $.get(server_base_url + "/hrms/master/ManageNomineeDetails/GetNomineeType", {
     }).done(function (pdata) {
-
+        
         $("#FieldDiv12").append("<div id='natureTypeCheckBoxDiv' class='row' />");
         for (var i = 0; i < pdata.length; i++) {
             var nomineetype = "nomineeType" + i;
-            $("#natureTypeCheckBoxDiv").append("<div class='col-xs-4'><input type='checkbox' id='" + nomineetype + "' name='nomType'class='nomineeTypes' value='" + pdata[i].shortDescription + "'>      " + pdata[i].shortDescription + "</div>");
+            $("#natureTypeCheckBoxDiv").append("<div class='col-xs-4'><input type='checkbox' id='" + nomineetype + "' name='nomType'class='nomineeTypes' value='" + pdata[i].shortDescription + "'> " + pdata[i].shortDescription + "</div>");
         }
     });
 }

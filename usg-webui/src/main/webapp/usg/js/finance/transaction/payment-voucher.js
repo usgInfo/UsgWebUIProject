@@ -128,7 +128,7 @@ function paymentVoucherMaster(divId) {
         addPaymentVoucherRows("displayReceiptVoucherAddTableBody");
         $("#panelMainBody").append("<div id='panelRow4' class='row' />");
 
-        $("#panelRow4").append("<div  class='col-xs-3' /><div class='col-xs-3'><button type='button' style='margin-left:10px' value='Add' id='addButtonatSave' class='btn btn-success mr5 pull-right' onclick=addPaymentVoucherRows('displayReceiptVoucherAddTableBody')>Add</button></div>");
+//        $("#panelRow4").append("<div  class='col-xs-3' /><div class='col-xs-3'><button type='button' style='margin-left:10px' value='Add' id='addButtonatSave' class='btn btn-success mr5 pull-right' onclick=addPaymentVoucherRows('displayReceiptVoucherAddTableBody')>Add</button></div>");
         $("#panelRow4").append("<div  class='col-xs-3' id='addbuttonmsg' />");
 
         $("#panelMainBody").append("<div id='panelRow3' class='row' />");
@@ -416,6 +416,20 @@ function addChequeDetailRowPayment(DivId, chequeNo, chequeDate, chequeBankName, 
 
 function addPaymentVoucherRows(DivId, ledgerList)
 {
+    var totalDrAmount = $('#totalDrAmount').val();
+    var totalCrAmount = $("#totalCrAmount").val();
+
+    totalDrAmount = parseFloat(totalDrAmount);
+    totalCrAmount = parseFloat(totalCrAmount);
+
+    if (totalDrAmount > 0.0 || totalCrAmount > 0.0) {
+
+        if (totalDrAmount === totalCrAmount) {
+            return false;
+        }
+
+    }
+
     var sno = 0;
     $('#addbuttonmsg').text("").val("");
     if (($('#totalDrAmount').val() == $('#totalCrAmount').val()) && ($('#totalDrAmount').val() != undefined && $('#totalCrAmount').val() != 0))
@@ -441,20 +455,20 @@ function addPaymentVoucherRows(DivId, ledgerList)
                         + "<td style='cursor:pointer;'>" + sno + "</td>"
                         + "<td style='cursor:pointer;'><select  type='text' onChange=disablefunctionForDrCrForPaymentVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "') id='" + drCrId + "' ></select></td>"
                         + "<td style='cursor:pointer;'><select  type='text' name='group' id='" + groupId + "' onchange=getLedgerListForPayment('" + groupId + "','" + ledgerId + "') ></select> <br><select  type='text' name='ledger' id='" + ledgerId + "'></select></td>"
-                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type=''text'  placeholder='Dr.Amount'  value='" + ledgerList[i].drAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
-                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type=''text'  placeholder='Cr.Amount'  value='" + ledgerList[i].crAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type=''text'  placeholder='Dr.Amount' onchange=addPaymentVoucherRows('displayReceiptVoucherAddTableBody');  value='" + ledgerList[i].drAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type=''text'  placeholder='Cr.Amount' onchange=addPaymentVoucherRows('displayReceiptVoucherAddTableBody'); value='" + ledgerList[i].crAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
                         + "<td style='cursor:pointer;'><input type='text' id='" + narrationId + "' placeholder='Short Narration' class='form-control' value='" + ledgerList[i].shortNarration + "'></td>"
                         + "<td style='cursor:pointer;'  id='" + ids + "'>" + ' <button type="button" class="btn mr5 btn-primary" onclick=deletePaymentVoucherListRow(this.parentNode.parentNode.rowIndex,"' + drAmountId + '","' + crAmountId + '") style="align:center;color:white">DELETE</button>' + "</td>"
                         + "</tr></thead>");
 
                 $("#displayReceiptVoucherAddTableBody").on('keydown', "#" + narrationId, function (e) {
-                    var keyCode = e.keyCode || e.which;
-                    if (keyCode == 9) {
-                        //e.preventDefault();
-                        // call custom function here
-                        // addPaymentVoucherRows('displayReceiptVoucherAddTableBody')
-                        addRowPaymentUpdateinVouchers('displayReceiptVoucherAddTableBody');
-                    }
+//                    var keyCode = e.keyCode || e.which;
+//                    if (keyCode == 9) {
+                    //e.preventDefault();
+                    // call custom function here
+                    // addPaymentVoucherRows('displayReceiptVoucherAddTableBody')
+//                        addRowPaymentUpdateinVouchers('displayReceiptVoucherAddTableBody');
+//                    }
                 });
 
                 getGroupListForOptionsPayment(ledgerList[i].group, groupId, "Group", drCrId);
@@ -498,18 +512,18 @@ function addPaymentVoucherRows(DivId, ledgerList)
                         + "<td style='cursor:pointer;'>" + numberofRows + "</td>"
                         + "<td style='cursor:pointer;'><select  type='text' onChange=disablefunctionForDrCrForPaymentVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "') id='" + drCrId + "' ><option val='' selected disabled>---- Select ----</option><option value='Dr'>Dr</option><option  value='Cr'>Cr</option></select></td>"
                         + "<td style='cursor:pointer;'><select  type='text' name='group' id='" + groupId + "' onchange=getLedgerListForPayment('" + groupId + "','" + ledgerId + "')></select> <br><select  type='text' name='ledger' id='" + ledgerId + "'></select></td>"
-                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type='text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
-                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type='text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type='text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);' onchange=addPaymentVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type='text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);' onchange=addPaymentVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
                         + "<td style='cursor:pointer;'><input type='text' id='shortNarration1' placeholder='Short Narration'  class='form-control'></td>"
                         + "<td style='cursor:pointer;'><button type='button' class='btn mr5 btn-default'  style='align:center;color:white'>DELETE</button></td>");
 
                 $("#displayReceiptVoucherAddTableBody").on('keydown', '#shortNarration1', function (e) {
-                    var keyCode = e.keyCode || e.which;
-                    if (keyCode == 9) {
-                        //e.preventDefault();
-                        // call custom function here
-                        addPaymentVoucherRows('displayReceiptVoucherAddTableBody');
-                    }
+//                    var keyCode = e.keyCode || e.which;
+//                    if (keyCode == 9) {
+                    //e.preventDefault();
+                    // call custom function here
+//                        addPaymentVoucherRows('displayReceiptVoucherAddTableBody');
+//                    }
                 });
 
             } else
@@ -518,8 +532,8 @@ function addPaymentVoucherRows(DivId, ledgerList)
                         + "<td style='cursor:pointer;'>" + numberofRows + "</td>"
                         + "<td style='cursor:pointer;'><select  type='text' onChange=disablefunctionForDrCrForPaymentVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "') id='" + drCrId + "' ><option val='' selected disabled>---- Select ----</option><option value='Dr'>Dr</option><option  value='Cr'>Cr</option></select></td>"
                         + "<td style='cursor:pointer;'><select  type='text' name='group' id='" + groupId + "' onchange=getLedgerListForPayment('" + groupId + "','" + ledgerId + "')></select> <br><select  type='text' name='ledger' id='" + ledgerId + "'></select></td>"
-                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type='text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
-                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type='text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type='text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);' onchange=addPaymentVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type='text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);' onchange=addPaymentVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
                         + "<td style='cursor:pointer;'><input type='text' id='shortNarration1' placeholder='Short Narration'  class='form-control'></td>"
                         + "<td style='cursor:pointer;'><button type='button' class='btn mr5 btn-primary' onclick=deleteReceiptVoucherListRow(this.parentNode.parentNode.rowIndex,'" + drAmountId + "','" + crAmountId + "')  style='align:center;color:white'>DELETE</button></td>");
 
@@ -706,7 +720,7 @@ function resetpaymentVoucherList()
 
 function  viewpaymentVoucherAddList(DivId) {
     $("#" + DivId).text("").append("<div class='tab-pane' id='viewReceiptVoucherAdd'/>");
-    $("#viewReceiptVoucherAdd").append("<div><h4>&nbsp;&nbsp;Note: Please press tab to generate next row or click on Add Button to generate next row (rows will generate until DR=CR)</h4></div>");
+//    $("#viewReceiptVoucherAdd").append("<div><h4>&nbsp;&nbsp;Note: Please press tab to generate next row or click on Add Button to generate next row (rows will generate until DR=CR)</h4></div>");
     $("#viewReceiptVoucherAdd").append("<div class='table-responsive' id='viewReceiptVoucherAddTableDiv' />");
     $("#viewReceiptVoucherAddTableDiv").append("<table class='table table-bordered table-striped table-warning mb30' id='displayReceiptVoucherAddTable' />");
     $("#displayReceiptVoucherAddTable").append("<thead class=''><tr>"
@@ -1345,6 +1359,8 @@ function deletePaymentVoucher(objId) {
 
 function  updatePaymentVoucher(obj) {
 
+    $('#totalDrAmount').val("");
+    $("#totalCrAmount").val("");
     var numberofRows = 0;
     obj = decodeURI(obj);
     obj = JSON.parse(obj);

@@ -400,6 +400,209 @@ function checkDrCrAmountAndAddEntryForVoucher(drCrId, voucherTableIdIsRowCreated
         }
     }
 }
+function BasicIfElseForSaveUpdateResponseDataWithExisted(data, successMsgDivCF) {
+    if (data == fail || data.statuscode == fail) {
+        displayLargeErrorMessagesInCenterInRed(successMsgDivCF, "Invalid username / password" + "<br/>");
+        return false;
+    } else if (data == unauthorized || data.statuscode == unauthorized) {
+        displayLargeErrorMessagesInCenterInRed(successMsgDivCF, unauthorizedMessage + "<br/>");
+        return false;
+    } else if (data == statusException || data.statuscode == statusException) {
+        displayLargeErrorMessagesInCenterInRed(successMsgDivCF, statusExceptionMessage + "<br/>");
+        return false;
+    } else if (data == invalidSession || data.statuscode == invalidSession) {
+        callSessionTimeout();
+        return false;
+    } else if (data == null) {
+        displayLargeErrorMessagesInCenterInRed(successMsgDivCF, "No User available" + "<br/>");
+        return false;
+    } else if (data == existMessage || data.statuscode == existMessage || data == exist || data.statuscode == exist || data == existed || data.statuscode == existed) {
+        displayLargeErrorMessagesInCenterInRed(successMsgDivCF, existMessage + "<br/>");
+        return false;
+    } else {
+        return true;
+    }
+}
+//Restric to enter space in the begining of textboxes
+function restictSpaceInTheBegining() {
+
+    var textStr;
+    var textareaStr;
+
+    $("input:text").keydown(function (event) {
+        if (($(this).val().length) === 0 && event.keyCode === 32) {
+            return false;
+        }
+    }).keyup(function (event) {
+        textStr = $(this).val();
+        if (textStr.charAt(0) === ' ') {
+            var textStrVal = $.trim(textStr);
+            $(this).val(textStrVal);
+        }
+    });
+
+    $("textarea").keydown(function (event) {
+        if (($(this).val().length) === 0 && event.keyCode === 32) {
+            return false;
+        }
+    }).keyup(function (event) {
+        textareaStr = $(this).val();
+        if (textStr.charAt(0) === ' ') {
+            var textareaStrVal = $.trim(textareaStr);
+            $(this).val(textareaStrVal);
+        }
+    });
+}
+
+//To create single column textbox in a row
+function getSingleColumnRowInputTextboxWithLable(DivID, labelName, required, rowId, inputId, str) {
+    if (str === undefined || str === "undefined" || str === null) {
+        str = "";
+    }
+    $("#" + DivID).append('<div class="row form-group" id="' + rowId + '" />');
+    var inputIdErr = inputId + "Err";
+    if (required === "required") {
+        $("#" + rowId).append('<div class="col-md-3" ><label style="font-weight: bold;" class="pull-right">' + labelName + '<span class="require">*</span></label></div>');
+    } else {
+        $("#" + rowId).append('<div class="col-md-3" ><label  style="font-weight: bold;" class="pull-right " >' + labelName + '</label></div>');
+    }
+    $("#" + rowId).append('<div class="col-md-9"> <input type="text" id="' + inputId + '" class="form-control" ' + str + ' ondrop="return false;" onpaste="return false;" ><span id="' + inputIdErr + '" ></span></div>');
+}
+
+//To create single column textarea in a row
+function getSingleColumnRowInputTextareaWithLable(DivID, labelName, required, rowId, inputId, str) {
+    if (str === undefined || str === "undefined" || str === null) {
+        str = "";
+    }
+    $("#" + DivID).append('<div class="row form-group" id="' + rowId + '" />');
+    var inputIdErr = inputId + "Err";
+    if (required === "required") {
+        $("#" + rowId).append('<div class="col-md-3" ><label style="font-weight: bold;" class="pull-right">' + labelName + '<span class="require">*</span></label></div>');
+    } else {
+        $("#" + rowId).append('<div class="col-md-3" ><label  style="font-weight: bold;" class="pull-right " >' + labelName + '</label></div>');
+    }
+    $("#" + rowId).append('<div class="col-md-9"> <textarea type="text" id="' + inputId + '" class="form-control" ' + str + ' ondrop="return false;" onpaste="return false;" ></textarea><span id="' + inputIdErr + '" ></span></div>');
+}
+//To create single column checkbox in a row
+function getSingleColumnRowCheckBoxWithLable(DivID, labelName, required, rowId, inputId, str) {
+    if (str === undefined || str === "undefined" || str === null) {
+        str = "";
+    }
+    $("#" + DivID).append('<div class="row form-group" id="' + rowId + '" />');
+    var inputIdErr = inputId + "Err";
+    if (required === "required") {
+        $("#" + rowId).append('<div class="col-sm-3" ><label style="font-weight: bold;" class="pull-right">' + labelName + '<span class="require">*</span></label></div>');
+    } else {
+        $("#" + rowId).append('<div class="col-sm-3" ><label  style="font-weight: bold;" class="pull-right" >' + labelName + '</label></div>');
+    }
+    $("#" + rowId).append('<div class="col-sm-3"> <input type="checkbox" id="' + inputId + '" class="form-group" ' + str + '  ><span id="' + inputIdErr + '" ></span></div>');
+}
+
+//To get two column dropdown in a row
+function getTwoColumnRowDropdownWithLable(DivID, labelName, required, rowId, inputId, str) {
+    if (str === undefined || str === "undefined" || str === null) {
+        str = "";
+    }
+    $("#" + DivID).append('<div class="row form-group" id="' + rowId + '" />');
+    var inputIdErr = inputId + "Err";
+    if (required === "required") {
+        $("#" + rowId).append('<div class="col-md-3" ><label style="font-weight: bold;" class="pull-right">' + labelName + '<span class="require">*</span></label></div>');
+    } else {
+        $("#" + rowId).append('<div class="col-md-3" ><label  style="font-weight: bold;" class="pull-right " >' + labelName + '</label></div>');
+    }
+    $("#" + rowId).append('<div class="col-md-9"> <Select id="' + inputId + '" class="form-control" ' + str + ' value="" ><span id="' + inputIdErr + '" ></span></div>');
+}
+
+
+//To create single column dropdown in a row
+function getSingleColumnRowDropdownWithLable(DivID, labelName, required, rowId, inputId, str) {
+    if (str === undefined || str === "undefined" || str === null) {
+        str = "";
+    }
+    $("#" + DivID).append('<div class="row form-group" id="' + rowId + '" />');
+    var inputIdErr = inputId + "Err";
+    if (required === "required") {
+        $("#" + rowId).append('<div class="col-md-3" ><label style="font-weight: bold;" class="pull-right">' + labelName + '<span class="require">*</span></label></div>');
+    } else {
+        $("#" + rowId).append('<div class="col-md-3" ><label  style="font-weight: bold;" class="pull-right " >' + labelName + '</label></div>');
+    }
+    $("#" + rowId).append('<div class="col-md-3"> <Select id="' + inputId + '" class="form-control" ' + str + ' value="" ><span id="' + inputIdErr + '" ></span></div>');
+}
+//for form creation
+function createFormWithoutDisplayingFY(DivId, innerDiv, masterName, FiledGroup, successMsgDivCF) {
+    var collapseId = "FormCollapseInCommonFunction";
+    var collapseIdPlusOrMinus = collapseId + "PlusOrMinus";
+
+    $("#" + DivId).text("").append("<div id='" + innerDiv + "' class='' />");
+    $("#" + innerDiv).text("").append("<div id='formHeader' />");
+    $("#formHeader").append("<div id='panel' class='panel panel-blue ' />");
+    $("#panel").append("<div id='panelHeading' class='panel-heading' />");
+    $("#panelHeading").append("<h4 id='panelTitle' class='panel-title' />");
+    $("#panelTitle").append("<div class='panel-title' style='font-weight:bold;font-size:15px;' data-parent='#accordion2' ><center>" + masterName + "</center><div class='pull-right' style='position: relative;bottom: 15px;cursor:pointer;' id='" + collapseIdPlusOrMinus + "'><span class='glyphicon glyphicon-minus-sign'></span></div></div>");
+    $("#panel").append("<div id='" + collapseId + "' class='panel-collapse collapse in ' />");
+    $("#" + collapseIdPlusOrMinus).click(function () {
+        $("#" + collapseId).toggle();
+        if ($("#" + collapseIdPlusOrMinus + " span").hasClass("glyphicon-minus-sign")) {
+            $("#" + collapseIdPlusOrMinus).text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
+        } else {
+            $("#" + collapseIdPlusOrMinus).text("").append("<span class='glyphicon glyphicon-minus-sign'></span>");
+        }
+    });
+    $("#" + collapseId).append("<div id='panelMainBody' class = 'panel-body' />");
+    $("#panelMainBody").append("<div id='financialYearDiv' class = 'row' />");
+    $("#panelMainBody").append("<div id='panelRow' class='row' />");
+    $("#panelRow").append("<div id='" + successMsgDivCF + "'></div>");
+    $("#panelRow").append("<div id='" + FiledGroup + "' class='form-groupn pal' />");
+    $("#" + FiledGroup).append("<input type='hidden' id='saveorupdate' value='save'>");
+    $("#" + FiledGroup).append("<input type='hidden' id='Id' >");
+
+}
+
+//To dispay error or success messages after saving or updation data
+function successOrErrorMeassages(messageDisplayDiv, defaultFunctionName, data, buttonValue, tableMessgeDisplayDiv) {
+    data = JSON.parse(data);
+    if (data == fail) {
+        displayErrorMessages(messageDisplayDiv, "Invalid username / password" + "");
+        setTimeout(function () {
+            defaultFunctionName();
+        }, 4000);
+    } else if (data == unauthorized) {
+        displayErrorMessages(messageDisplayDiv, unauthorizedMessage + "");
+        setTimeout(function () {
+            defaultFunctionName();
+        }, 4000);
+    } else if (data == statusException) {
+        displayErrorMessages(messageDisplayDiv, statusExceptionMessage + "");
+        setTimeout(function () {
+            defaultFunctionName();
+        }, 4000);
+    } else if (data.statuscode == invalidSession) {
+        callSessionTimeout();
+    } else if (data == duplicate_Message) {
+        displayErrorMessages(messageDisplayDiv, existed + "");
+        setTimeout(function () {
+            defaultFunctionName();
+        }, 4000);
+    } else if (data == delete_map) {
+        displayErrorMessages(tableMessgeDisplayDiv, "This Data" + delete_map_message, "");
+        setTimeout(function () {
+            defaultFunctionName();
+        }, 4000);
+    } else {
+        if (buttonValue === "Save") {
+            displaySuccessMessages(messageDisplayDiv, successMessage, "");
+        } else if (buttonValue === "Update") {
+            displaySuccessMessages(messageDisplayDiv, updateSuccessMessage, "");
+        } else if (buttonValue === "Delete") {
+            displaySuccessMessages(tableMessgeDisplayDiv, deleteSuccessMessage, "");
+        }
+        setTimeout(function () {
+            defaultFunctionName();
+        }, 4000);
+    }
+
+}
+
 
 
 

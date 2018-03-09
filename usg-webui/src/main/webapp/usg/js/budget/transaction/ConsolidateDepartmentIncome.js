@@ -90,7 +90,7 @@ function ConsolidateDepartmentIncomeBudget(divId) {
         getTwoColumnInRow("FieldGroup4", "Row5", "Row5Col1", "Row5Col2");
         $("#Row5Col1").append(getLabel("Previous Budget", "") + "" + getDropDown("previousBudget", "", "", ""));
         document.getElementById("previousBudget").disabled = true;
-        $("#budgetType").attr("onchange", " getAllSrNosForConsolidated('previousBudget')");
+        $("#budgetType").attr("onchange", " getAllSrNosForConsolidatedDeptIncome('previousBudget')");
 
         $("#panelMainBody").append("<div id='panelRow4' class='row' />");
 
@@ -105,6 +105,71 @@ function ConsolidateDepartmentIncomeBudget(divId) {
         //  viewOption("/hrms/common/BudgetHead/View", "", "budgetHead", "budgetHead", "Budget Head");
         viewOption("budget/master/BudgetType/View", "", "description", "budgetType", "Budget Type");
     }
+
+}
+function getAllSrNosForConsolidatedDeptIncome(id)
+{
+    var fundType = $("#fundType").val();
+    var sector = $("#sector").val();
+    var location = $("#location").val();
+    var finYear = $("#financialYear").val();
+    var budgetType = $("#budgetType").val();
+    var ddo = $("#ddo").val();
+    $("#" + id).val("");
+    $("#previousBudget").val("");
+    var Json = {
+        sector: sector,
+        fundType: fundType,
+        budgetType: budgetType,
+        financialYear: finYear,
+        location: location,
+        ddo: ddo
+    }
+    var department = [];
+    if ($("#department").val() == "")
+    {
+        $("#department option").each(function()
+        {
+            // Add $(this).val() to your list
+
+            if ($(this).val() != "")
+            {
+                department.push($(this).val());
+            }
+
+        });
+    } else
+    {
+        department.push($("#department").val());
+    }
+    var Json = JSON.stringify(Json);
+    $.get(server_base_url + "/GetPreviousBudgetNosConsolidateIncomeDept", {
+        obj: Json,
+        department: JSON.stringify(department)
+
+    }).done(function(pdata)
+    {
+        if (pdata != null)
+        {
+            $("#" + id).text("");
+            //alert(pdata);
+            if (pdata == null || pdata == "" || pdata == 500 || pdata == 501)
+            {
+                document.getElementById(id).disabled = true;
+                // $("#"+ id).text("").append("<option >" + NoDataFound + "</option>");
+            } else
+            {
+                $("#" + id).text("");
+                $("#" + id).text("").append("<option >---------- Previous Budgets-------</option>");
+                for (var i = 0; i < pdata.length; i++)
+                {
+                    document.getElementById(id).disabled = false;
+                    $("#" + id).append("<option value='" + pdata[i]._id.$oid + "'>" + pdata[i].srNo + "</option>");
+
+                }
+            }
+        }
+    });
 
 }
 function consolidateDeptincomeBudgetValidation() {
@@ -465,6 +530,7 @@ function viewConsolidateDepartmentIncome(divId)
                 condition: "IncomeBudget",
                 department: JSON.stringify(department)
             }).done(function(bdata) {
+                $("#SearchFormTable").text("")
                 bdata = JSON.parse(bdata);
                 if (bdata == fail) {
                     displayLargeErrorMessagesInCenterInRed("ErrorDiv", noDataAvailable);
@@ -607,7 +673,7 @@ function saveConsolidateDeptIncome(saveorsubmit, searchSubmit) {
                     objJson: JSON.stringify(saveThisConsolidateDetails),
                     userid: getUserSessionElement("userId"),
                     financialYear: $('#financialYear').val(),
-                    budgetHead: $('#budgetHead').val(),
+                    budgetType: $('#budgetType').val(),
                     fundType: $('#fundType').val(),
                     sector: $('#sector').val(),
                     department: $('#department').val()
@@ -741,7 +807,7 @@ function updateConsolidateDeptIncome(obj) {
             + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + obj.askedForAmount + "' ></td>");
     $("#listpanelRow").append("<div class='row' id='saveSubmitResetPrintRow12'/>");
     $("#saveSubmitResetPrintRow12").append("<div class='col-sm-12' id='buttonIdofTable'/>");
-    $("#buttonIdofTable").append("<center><button class='btn btn-success mr5 btn-flat'  onclick='UpdateCinsolidateDeptIncomeRow()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class='btn btn-warning mr5 btn-flat' onclick='goBackToConsolidateSearchFunction()'>Back</button></center>");
+    $("#buttonIdofTable").append("<center><button class='btn btn-success mr5 btn-flat'  onclick='UpdateCinsolidateDeptIncomeRow()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class='btn btn-warning mr5 btn-flat' onclick='goBackToConsolidateIncomeBudgetSearchFunction()'>Back</button></center>");
 }
 function UpdateCinsolidateDeptIncomeRow() {
     if (checkUserPrivelege(pvUpdateBudgetConsolidatedIncome)) {

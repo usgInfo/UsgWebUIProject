@@ -62,6 +62,7 @@ function createLocationWiseBudgetIncome() {
         $("#locationWiseBudgetIncomeDivRow5").append("<div id='locationWiseBudgetIncomeFieldGroup5' class='form-group' />");
         getTwoColumnInRow("locationWiseBudgetIncomeFieldGroup5", "Row5", "Row5Col1", "Row5Col2");
         $("#Row5Col1").append(getLabel("BudgetHead", "") + "" + getDropDown("budgethead"));
+        $("#Row5Col2").append(getLabel("Department", "") + "" + getDropDown("department", "", "", ""));
         $("#sector").attr("onchange", " getBudgetHeads('budgethead')");
         $("#fundType").attr("onchange", "clearSector()");
         $("#incomeBudgetGrantDivMainBody").append("<div id='incomeBudgetGrantDivRow3' class='row' />");
@@ -71,6 +72,7 @@ function createLocationWiseBudgetIncome() {
         getLoggedInDDOLocationInDropDown("ddo", "location");
         getBudgetfinancialyear();
         viewOption("budget/master/BudgetType/View", "", "description", "budgetType", "Budget Type");
+        fetchAllDeptCreteIncome("", "department", "Department");
         //  viewOption("/hrms/common/BudgetHead/View", "", "budgetHead", "budgethead", "Budget Head");
         viewOption("budget/master/FundType/View", "", "description", "fundType", "Fund Type");
         fetchAlSectors("", "sector", "Sector");
@@ -118,10 +120,15 @@ function searchforlocationWiseBudgetIncome() {
         $("#Row9Col1").append(getLabel("Budget Head", "") + "" + getDropDown("budgetheadSearch"));
         $("#Row9Col2").append(getLabel("Status", "required") + "" + getDropDown("status"));
 
+        $("#SearchbodyMainBodypanelRow").append("<div id='row5' class='form-group' />");
+        getTwoColumnInRow("row5", "Row10", "Row10Col1", "Row10Col2");
+        $("#Row10Col1").append(getLabel("Department", "") + "" + getDropDown("departmentSearch"));
+
+
         $("#SearchbodyMainBodypanelRow").append("<div id='searchbut' class='form-group' />");
         $("#searchbut").append("<label class='col-sm-5 control-label'></label>");
         $("#searchbut").append("<div id='savesearchButton' class='col-sm-7' />");
-        $("#savesearchButton").append("<button class='btn btn-success mr5 btn-flat' id='SearchIncomeBudgetButton' onclick='validateIncomelocationBudgetSearch()'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp");
+        $("#savesearchButton").append("<button class='btn btn-success mr5 btn-flat' id='LocationWiseBudgetSearchButton' onclick='validateIncomelocationBudgetSearch()'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp");
         $("#savesearchButton").append("<button class='btn btn-warning mr5 btn-flat' onclick='ResetExpenseBudgetApprovalSearch()'>Reset</button>&nbsp&nbsp&nbsp");
         getLoggedInDDOLocationInDropDown("searchddo", "searchlocation");
         // viewReDddoListForList("", "searchddo");
@@ -129,6 +136,7 @@ function searchforlocationWiseBudgetIncome() {
         viewOption("budget/master/BudgetType/View", "", "description", "budgetTypeSearch", "Budget Type");
         viewOption("hrms/common/BudgetHead/View", "", "budgetHead", "budgetheadSearch", "Budget Head");
         viewOption("budget/master/FundType/View", "", "description", "fundTypeSearch", "Fund Type");
+        fetchAllDeptCreteIncome("", "departmentSearch", "Department");
         fetchAlSectors("", "sectorSearch", "Sector");
         var statusOptions = ["Save", "Submit"];
         getHardCodedOptions("status", "Status", statusOptions);
@@ -209,6 +217,21 @@ function validateIncomelocationBudgetSearch() {
                 budgetHead: budgethead,
                 consolidateBudgetStatus: $('#status').val()
             };
+            var department = []
+            if ($("#departmentSearch").val() == "")
+            {
+                $("#departmentSearch option").each(function()
+                {
+                    if ($(this).val() != "")
+                    {
+                        department.push($(this).val());
+                    }
+
+                });
+            } else
+            {
+                department.push($("#departmentSearch").val());
+            }
             $("#maritalListPanel").remove("");
             $("#tableHeaderTable").text("").append("<div id='maritalListPanelSearch' class='panel panel-blue' />");
             $("#maritalListPanelSearch").text("").append("<div id='maritalListPanelHeading' class='panel-heading' />");
@@ -231,7 +254,8 @@ function validateIncomelocationBudgetSearch() {
             $("#viewUser").append("<div class='table-responsive' id='viewUserSectionTableDiv' />");
             $("#viewUserSectionTableDiv").append("<table class='table table-bordered table-striped table-warning mb30' id='displayBankTable' />");
             $.post(server_base_url + "/Budget/BudgetTransaction/LocationWiseBudgetIncome/Search", {
-                searchObj: JSON.stringify(searchObj)
+                searchObj: JSON.stringify(searchObj),
+                department: JSON.stringify(department)
             }).done(function(bdata) {
                 bdata = JSON.parse(bdata);
 
@@ -242,7 +266,9 @@ function validateIncomelocationBudgetSearch() {
                             $("#displayBankTable").append("<thead class=''><tr>"
                                     + " <th> S.No</th>"
                                     + "<th style='min-width:30%;width:auto;'><i ></i>Ledger </th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Budget Head </th>"
                                     + "<th style='min-width:30%;width:auto;'><i ></i>Asked Amount(In Lacs)</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Sanctioned Amount(In Lacs)</th>"
                                     + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
                                     + "<th style='min-width:1%;width:80px;'><i ></i>Edit</th>"
                                     + "<th style='min-width:1%;width:80px;'><i ></i>Delete</th>"
@@ -255,7 +281,9 @@ function validateIncomelocationBudgetSearch() {
                                 $("#displayBankTableBody").append("<tr id='" + bdata[i]._id.$oid + "' style='cursor:pointer;' >"
                                         + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
                                         + "<td style='cursor:pointer;'>" + bdata[i].ledger + "<input type='hidden' value='" + bdata[i]._id.$oid + "'></td>"
+                                        + "<td style='cursor:pointer;'>" + bdata[i].budgetHeadName + "</td>"
                                         + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].requestedAmount + "' readonly></td>"
+                                        + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].approvedAmount + "' readonly></td>"
                                         + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + bdata[i].sanctionAmount + "' readonly></td>"
                                         + "<td style='cursor:pointer;' onclick=updateLocationWiseIncome('" + encodeURI(objJson) + "')>" + ' <i class="fa fa-edit"></i>&nbsp;&nbsp;<a  class="anchor_edit" style="margin-width:1%,width:80px" >Edit</a>' + "</td>"
                                         + "<td onclick=deletePopUp('deleteLocationwiseIncome','nothingToDo','" + bdata[i]._id.$oid + "')>" + ' <i class="fa fa-trash-o"></i>&nbsp;&nbsp;<a  class="anchor_delete" style="margin-width:1%,width:80px" >Delete</a>' + "</td></tr>");
@@ -282,7 +310,9 @@ function validateIncomelocationBudgetSearch() {
                             $("#displayBankTable").append("<thead class=''><tr>"
                                     + " <th> S.No</th>"
                                     + "<th style='min-width:30%;width:auto;'><i ></i>Ledger</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Budget Head </th>"
                                     + "<th style='min-width:30%;width:auto;'><i ></i>Asked Amount(In Lacs) </th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Sanctioned Amount(In Lacs)</th>"
                                     + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
                                     + "</tr></thead>");
                             var sno = 0;
@@ -293,7 +323,9 @@ function validateIncomelocationBudgetSearch() {
                                 $("#displayBankTableBody").append("<tr id='" + bdata[i].status + "' style='cursor:pointer;' >"
                                         + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
                                         + "<td style='cursor:pointer;'>" + bdata[i].ledger + "</td>"
+                                        + "<td style='cursor:pointer;'>" + bdata[i].budgetHeadName + "</td>"
                                         + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].requestedAmount + "' readonly></td>"
+                                        + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].approvedAmount + "' readonly></td>"
                                         + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + bdata[i].sanctionAmount + "' readonly></td></tr>");
                             }
                             $('#displayBankTable').datatable();
@@ -389,6 +421,8 @@ function getDdoLocation() {
     });
 }
 function showBudgetHeads() {
+    $("#searchPanel").text("");
+    $("#tableHeaderTable").text("");
     $("#finyearIder").text("");
     $("#budgetTypeErr").text("");
     $("#ddoErr").text("");
@@ -435,7 +469,21 @@ function budgetHeadsList()
         var sector = $("#sector").val();
         var budgetType = $("#budgetType").val();
         var budgethead = $("#budgethead").val();
+        var department = []
+        if ($("#department").val() == "")
+        {
+            $("#department option").each(function()
+            {
+                if ($(this).val() != "")
+                {
+                    department.push($(this).val());
+                }
 
+            });
+        } else
+        {
+            department.push($("#department").val());
+        }
         $("#tableHeader").append("<div id='listPanel' />");
         $("#listPanel").text("").append("<div class='panel panel-blue ' id='maritalListPanel'/>");
         $("#maritalListPanel").text("").append("<div id='maritalListPanelHeading' class='panel-heading' />");
@@ -445,10 +493,6 @@ function budgetHeadsList()
         $("#collapseOne4").append("<div id='listpanelMainBodyDiv' class = 'panel-body' style='padding-bottom: 0px;' />");
         $("#listpanelMainBodyDiv").append("<div id='approvedAmountDiv' class='row' />");
         $("#approvedAmountDiv").append("<div id='approvedAmountDivFieldGroup' class='form-group' />");
-//    $("#approvedAmountDivFieldGroup").append("<label class='col-sm-2 control-label'>Approved Amount</label>");
-//    $("#approvedAmountDivFieldGroup").append("<div id='approvedAmountDivField' class='col-sm-4'style=width: 158px;>");
-//    $("#approvedAmountDivField").append("<input type='text' id='approvedAmount' class='form-control1'>");
-
         $("#maritalListPanel").append("<div id='collapseOne3' class='panel-collapse collapse in' />");
         $("#collapseOne3").append("<div id='listpanelMainBody' class = 'panel-body' />");
         $("#listpanelMainBody").append("<div id='listpanelRow1' class='row' />");
@@ -460,9 +504,10 @@ function budgetHeadsList()
         $("#displayBankTable").append("<thead class=''><tr>"
                 + " <th style='min-width:40%;width:auto;'><i ></i> S.No</th>"
                 + "<th style='min-width:40%;width:auto;'><i ></i>Ledger</th>"
+                + "<th style='min-width:40%;width:auto;'><i ></i>BudgetHead</th>"
                 + "<th style='min-width:30%;width:auto;'><i ></i>Requested Amount(In Lacs)</th>"
-                + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
                 + "<th style='min-width:30%;width:auto;'><i ></i>Sanction Amount(In Lacs)</th>"
+                + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
                 + "</tr></thead>");
 
         var searchObj = {
@@ -475,7 +520,8 @@ function budgetHeadsList()
             location: location
         };
         $.get(server_base_url + "Budget/Common/BudgetHead/SearchBudgetHeads", {
-            searchObj: JSON.stringify(searchObj)
+            searchObj: JSON.stringify(searchObj),
+            department: JSON.stringify(department)
         }).done(function(bdata) {
 
             bdata = JSON.parse(bdata);
@@ -495,18 +541,26 @@ function budgetHeadsList()
             } else {
                 if (bdata != null) {
                     if (bdata.length > 0) {
+                        var amount = 0;
                         var sno = 0;
+                        var sanctionedAMT = 0;
                         $("#displayBankTable").append("<tbody id='displayBankTableBody'/>");
                         for (var i = 0; i < bdata.length; i++) {
                             sno++;
+                            sanctionedAMT = bdata[i].sanctionedAmount;
+                            if (sanctionedAMT == undefined || sanctionedAMT == "undefined")
+                            {
+                                sanctionedAMT = 0;
+                            }
                             // alert("----bdata[i].financalYear----------"+bdata[i].financalYear);
                             var objJson = JSON.stringify(bdata[i]);
                             $("#displayBankTableBody").append("<tr id='" + bdata[i].status + "' style='cursor:pointer;' >"
                                     + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
                                     + "<td style='cursor:pointer;'>" + bdata[i].ledger + "</td>"
+                                    + "<td style='cursor:pointer;'>" + bdata[i].budgetHeadName + "</td>"
                                     + "<td style='cursor:pointer;'>" + bdata[i].requestedAmount + "</td>"
-                                    + "<td style='cursor:pointer;'>" + bdata[i].sanctionedAmount + "</td>"
-                                    + "<td style='cursor:pointer;'><input type='text' name='approveAmout' id='approveAmout" + i + "' onchange=validateSanctnAmount('" + bdata[i].sanctionedAmount + "','" + i + "') onkeypress='return validateNumber(event)' ><div id='error" + i + "'></div></td></tr>");
+                                    + "<td style='cursor:pointer;'>" + sanctionedAMT + "</td>"
+                                    + "<td style='cursor:pointer;'><input type='text' name='approveAmout' value=" + amount + " id='approveAmout" + i + "' onchange=validateSanctnAmount('" + sanctionedAMT + "','" + i + "') onkeypress='return validateNumber(event)' ><div id='error" + i + "'></div></td></tr>");
 
                         }
                         $("#displayBankTable").DataTable({paging: true});
@@ -526,7 +580,7 @@ function  validateSanctnAmount(sanctionedAmount, i)
     var SanValue = $("#approveAmout" + i).val();
     if (parseInt(SanValue) > parseInt(sanctionedAmount))
     {
-        displaySmallErrorMessages("error" + i, "Sanction amount must be less than approved amount.");
+        displaySmallErrorMessages("error" + i, "Approved amount must be less than or equal to Sanctioned amount.");
     }
 
 
@@ -553,7 +607,7 @@ function validateBeforeSave()
             if (parseInt(SanValue) > parseInt(sanctionedAmount))
             {
                 result = "false";
-                displaySmallErrorMessages("error" + i, "Sanction amount must be less than approved amount.");
+                displaySmallErrorMessages("error" + i, "Approved amount must be less than or equal to Sanctioned amount.");
             }
         }
     }
@@ -569,6 +623,21 @@ function saveBudgetApprove()
 //        $('#displayBankTable tbody tr ').each(function(i) {
 //            var row = $(this).closest('tr');
         var rows = $("#displayBankTable").dataTable().fnGetNodes();
+        var department = []
+        if ($("#department").val() == "")
+        {
+            $("#department option").each(function()
+            {
+                if ($(this).val() != "")
+                {
+                    department.push($(this).val());
+                }
+
+            });
+        } else
+        {
+            department.push($("#department").val());
+        }
         for (var i = 0; i < rows.length; i++)
         {
             var row = $(rows[i]);
@@ -589,7 +658,7 @@ function saveBudgetApprove()
                 ledgerId: budgetIncomeDetails.ledgerId,
                 prievioueBudget: budgetIncomeDetails.prievioueBudget,
                 consolidatedIncomeId: budgetIncomeDetails._id.$oid,
-                sanctionAmount: row.find('td:eq(4) input').val(),
+                sanctionAmount: row.find('td:eq(5) input').val(),
                 approvedAmount: budgetIncomeDetails.sanctionedAmount,
                 departmentName: budgetIncomeDetails.departmentName,
                 consolidateBudgetStatus: "Save"
@@ -604,7 +673,8 @@ function saveBudgetApprove()
             var id = getUserSessionElement("userId");
             $.post(server_base_url + "Budget/Common/BudgetHead/SaveHeadwiseIncomeBudget", {
                 objJson: JSON.stringify(saveThisConsolidateDetails),
-                userid: id
+                userid: id,
+                department: JSON.stringify(department)
             }).done(function(data) {
                 if (data == fail) {
                     displaySmallErrorMessages("pregsuccessBefore", "Invalid username / password" + "<br/><br/>");
@@ -672,7 +742,11 @@ function updateLocationWiseIncome(obj) {
             + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + obj.sanctionAmount + "' ></td>");
     $("#listpanelRow").append("<div class='row' id='saveSubmitResetPrintRow12'/>");
     $("#saveSubmitResetPrintRow12").append("<div class='col-sm-12' id='buttonIdofTable'/>");
-    $("#buttonIdofTable").append("<center><button class='btn btn-success mr5 btn-flat'  onclick='UpdateLocationwiseIncomeRow()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class='btn btn-warning mr5 btn-flat' onclick='goBackToConsolidateSearchFunction()'>Back</button></center>");
+    $("#buttonIdofTable").append("<center><button class='btn btn-success mr5 btn-flat'  onclick='UpdateLocationwiseIncomeRow()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class='btn btn-warning mr5 btn-flat' onclick='goBackToLocationWiseIncomeSearchFunction()'>Back</button></center>");
+}
+function goBackToLocationWiseIncomeSearchFunction()
+{
+    $("#LocationWiseBudgetSearchButton").click();
 }
 function UpdateLocationwiseIncomeRow() {
     if (checkUserPrivelege(pvUpdateBudgetConsolidatedIncome)) {
@@ -701,7 +775,7 @@ function UpdateLocationwiseIncomeRow() {
             } else if (data == null) {
                 displaySmallErrorMessages("pregsuccessBefore", "No User available" + "<br/><br/>");
             } else {
-                $("#SearchIncomeBudgetButton").click();
+                $("#LocationWiseBudgetSearchButton").click();
                 displaySuccessMessages("messageDiv", updateSuccessMessage, "");
                 clearSuccessMessageAfterTwoSecond("messageDiv");
             }
@@ -728,7 +802,7 @@ function deleteLocationwiseIncome(Id) {
 
             displaySuccessMessages("ErrorDiv", deleteMessage, "");
             setTimeout(function() {
-                $("#SearchIncomeBudgetButton").click();
+                $("#LocationWiseBudgetSearchButton").click();
             }, 1000);
         }
     });
@@ -738,6 +812,21 @@ function SubmitLocationInSearch() {
     if (checkUserPrivelege(pvUpdateBudgetConsolidatedIncome)) {
         var result = 1;
         var saveThisConsolidateDetails = [];
+        var department = []
+        if ($("#departmentSearch").val() == "")
+        {
+            $("#departmentSearch option").each(function()
+            {
+                if ($(this).val() != "")
+                {
+                    department.push($(this).val());
+                }
+
+            });
+        } else
+        {
+            department.push($("#departmentSearch").val());
+        }
 //        $('#displayBankTable tbody tr input[type="checkbox"][name="case"]:checked').each(function(i) {
 //            var row = $(this).closest('tr');
         var rows = $("#displayBankTable").dataTable().fnGetNodes();
@@ -758,7 +847,8 @@ function SubmitLocationInSearch() {
             var userid = getUserSessionElement("userId");
             $.post(server_base_url + "/budget/budgetTranscation/LocationWiseIncomeSubmit", {
                 objJson: JSON.stringify(saveThisConsolidateDetails),
-                userid: userid
+                userid: userid,
+                department: JSON.stringify(department)
             }).done(function(data) {
                 if (data == fail) {
                     displaySmallErrorMessages("pregsuccessBefore", "Invalid username / password" + "<br/><br/>");
@@ -773,7 +863,7 @@ function SubmitLocationInSearch() {
                 } else {
                     displaySuccessMessages("messageDiv", sendMessage, "");
                     setTimeout(function() {
-                        $("#SearchIncomeBudgetButton").click();
+                        $("#LocationWiseBudgetSearchButton").click();
                     }, 3000);
                 }
             });

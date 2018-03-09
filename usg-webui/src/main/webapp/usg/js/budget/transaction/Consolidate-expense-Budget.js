@@ -303,6 +303,7 @@ function viewConsolidateExpensesBudgetCodeList(divId)
                 searchObj: JSON.stringify(searchObj),
                 condition: "IncomeBudget"
             }).done(function(bdata) {
+                $("#SearchTable").text("");
                 bdata = JSON.parse(bdata);
                 if (bdata == fail) {
                     displayLargeErrorMessagesInCenterInRed("ErrorDiv", noDataAvailable);
@@ -423,7 +424,7 @@ function saveConsolidateExpensesBudgetDetails(saveorsubmit, searchSubmit) {
                     objJson: JSON.stringify(saveThisConsolidateDetails),
                     userid: id,
                     financialYear: $('#financialYear').val(),
-                    budgetHead: $('#budgethead').val(),
+                    budgetType: $('#budgetType').val(),
                     fundType: $('#fundType').val(),
                     sector: $('#sector').val()
                 }).done(function(data) {

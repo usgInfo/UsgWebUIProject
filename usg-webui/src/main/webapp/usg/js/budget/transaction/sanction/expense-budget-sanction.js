@@ -239,6 +239,7 @@ function viewSanctionExpensesBudgetCodeList(divId)
         $.get(server_base_url + "/budget/transaction/expense/sanction/Search", {
             searchObj: JSON.stringify(searchObj)
         }).done(function(bdata) {
+            $("#searchPanel").text("");
             bdata = JSON.parse(bdata);
             if (bdata == fail) {
                 displayLargeErrorMessagesInCenterInRed("ErrorDiv", noDataAvailable);
@@ -367,7 +368,7 @@ function saveIncomeUniversityBudgetDetails(saveorsubmit) {
                 userid: id,
                 status: saveorsubmit,
                 financialYear: $('#financialYear').val(),
-                budgetHead: $('#budgethead').val(),
+                budgetType: $('#budgetType').val(),
                 fundType: $('#fundType').val(),
                 sector: $('#sector').val()
             }).done(function(data) {

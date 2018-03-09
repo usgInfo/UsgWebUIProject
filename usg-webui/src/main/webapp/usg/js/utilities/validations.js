@@ -73,6 +73,17 @@ function EmailValidation() {
 function alphabetsWithSpace() {
 
 }
+
+//accept only numbers
+function acceptNumeric(key) {
+    var keycode = (key.which) ? key.which : key.keyCode;
+    if ((keycode >= 48 && keycode <= 57)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function acceptAlphanumeric(key) {
     var keycode = (key.which) ? key.which : key.keyCode;
 //comparing pressed keycodes
@@ -95,41 +106,45 @@ function Category() {
     return pattern;
 }
 
-function isNumberKeyValidation(el,evt) {
-  var charCode = (evt.which) ? evt.which : evt.keyCode;
+function isNumberKeyValidation(el, evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
     var number = el.value.split('.');
     if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
         return false;
     }
-    if(number.length>1 && charCode == 46){
-         return false;
+    if (number.length > 1 && charCode == 46) {
+        return false;
     }
     var caratPos = getSelectionStart(el);
     var dotPos = el.value.indexOf(".");
-    if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+    if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1)) {
         return false;
     }
     return true;
 }
 
 function getSelectionStart(o) {
-	if (o.createTextRange) {
-		var r = document.selection.createRange().duplicate()
-		r.moveEnd('character', o.value.length)
-		if (r.text == '') return o.value.length
-		return o.value.lastIndexOf(r.text)
-	} else return o.selectionStart
+    if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '')
+            return o.value.length
+        return o.value.lastIndexOf(r.text)
+    } else
+        return o.selectionStart
 }
 
 function AlphaNumericWithDot(evt) {
-          var theEvent = evt || window.event;
-          var key = theEvent.keyCode || theEvent.which;
-          key = String.fromCharCode(key);
-          if (key.length == 0) return;
-          ///^[ A-Za-z0-9_@./#&+-]*$/
-          var regex = /^[ A-Za-z0-9.,\b]+$/;
-          if (!regex.test(key)) {
-              theEvent.returnValue = false;
-              if (theEvent.preventDefault) theEvent.preventDefault();
-          }
+    var theEvent = evt || window.event;
+    var key = theEvent.keyCode || theEvent.which;
+    key = String.fromCharCode(key);
+    if (key.length == 0)
+        return;
+    ///^[ A-Za-z0-9_@./#&+-]*$/
+    var regex = /^[ A-Za-z0-9.,\b]+$/;
+    if (!regex.test(key)) {
+        theEvent.returnValue = false;
+        if (theEvent.preventDefault)
+            theEvent.preventDefault();
+    }
 }

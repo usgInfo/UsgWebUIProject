@@ -108,8 +108,9 @@ function budgetMenuTabs() {
         $("#budgetCommonMenuUl").append('<li><a href=javascript:createBudgetType() id="createAndManageBudgetTypeMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Create and Manage Budget Type</span></a></li>');
     }
     // if (checkUserPrivelege(pvCreateBudgetType) || checkUserPrivelege(pvViewBudgetType)) {
-    $("#budgetCommonMenuUl").append('<li><a href=javascript:createPreviousBudgetActualAmount("dashboardBodyMainDiv") id="createPreviousBudgetActualAmount" ><i class="fa fa-bold"></i><span class="submenu-title">Actual Budget For Previous Years</span></a></li>');
-    // }
+    if (checkUserRole(rlSuperAdmin)|| checkUserRole(rlBudgetAdmin)) {
+        $("#budgetCommonMenuUl").append('<li><a href=javascript:createPreviousBudgetActualAmount("dashboardBodyMainDiv") id="createPreviousBudgetActualAmount" ><i class="fa fa-bold"></i><span class="submenu-title">Actual Budget For Previous Years</span></a></li>');
+    }
 
 
 
@@ -258,12 +259,12 @@ function budgetTransactionMenuTabs() {
                     $("#BudgetTransactionMenuUl").append('<li><a href=javascript:displayBudgetIncomeTransaction() id="displayBudgetIncomeTransactionMaster"><i class="fa fa-bold"></i><span class="submenu-title">Create Income Budget @ Department</span></a></li>');
                 }
                 $("#BudgetTransactionMenuUl").append('<li><a href=javascript:createDeptWiseBudgetIncome() id="createDeptWiseBudgetIncomeMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Income Budget Allocation @ Department</span></a></li>');
-             //   $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionIncomeBudget() id="extraProvisionIncome" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Income</span></a></li>');
+                //   $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionIncomeBudget() id="extraProvisionIncome" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Income</span></a></li>');
                 if (checkUserPrivelege(pvCreateBudgetExpenses) || checkUserPrivelege(pvViewBudgetExpenses)) {
                     $("#BudgetTransactionMenuUl").append('<li><a href=javascript:displayBudgetExpense() id="displayBudgetExpenseMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Create Expense Budget @ Department</span></a></li>');
                 }
                 $("#BudgetTransactionMenuUl").append('<li><a href=javascript:createDeptWiseBudgetExpense() id="createDeptWiseBudgetExpenseMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Expense Budget Allocation @ Department</span></a></li>');
-               // $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionExpenseBudget() id="extraProvisionexpense" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Expense</span></a></li>');
+                // $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionExpenseBudget() id="extraProvisionexpense" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Expense</span></a></li>');
                 $("#budgetSanctionExpensessBudgetmasters,#approvalExpenseBudgetMaster,#extraProvisionexpense,#extraProvisionIncome,#budgetReAppropriationMaster,#createDeptWiseBudgetExpenseMaster,#displayBudgetIncomeTransactionMaster,#ConsolidateDepartmentIncome,#displayBudgetExpenseMaster,#ConsolidateDepartmentExpense,#budgetConsolidateIncomeBudgetmasters,#budgetConsolidateExpensessBudgetmasters,#incomeBudgetSanctionUniMaster,#createDeptWiseBudgetIncomeMaster,#createLocationWiseBudgetIncomeMaster,#displayBudgetExpenseMaster").click(function() {
                     $(this).parent().siblings().children("a").css("color", "white");
                     $(this).css("color", "red");
@@ -280,7 +281,7 @@ function budgetTransactionMenuTabs() {
                     $("#BudgetTransactionMenuUl").append('<li><a href=javascript:createLocationWiseBudgetIncome() id="createLocationWiseBudgetIncomeMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Income Budget Approval @ Department Head</span></a></li>');
                 }
                 $("#BudgetTransactionMenuUl").append('<li><a href=javascript:createDeptWiseBudgetIncome() id="createDeptWiseBudgetIncomeMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Income Budget Allocation @ Department</span></a></li>');
-             //   $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionIncomeBudget() id="extraProvisionIncome" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Income</span></a></li>');
+                //   $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionIncomeBudget() id="extraProvisionIncome" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Income</span></a></li>');
                 if (checkUserPrivelege(pvCreateBudgetExpenses) || checkUserPrivelege(pvViewBudgetExpenses)) {
                     $("#BudgetTransactionMenuUl").append('<li><a href=javascript:displayBudgetExpense() id="displayBudgetExpenseMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Create Expense Budget @ Department</span></a></li>');
                 }
@@ -289,7 +290,7 @@ function budgetTransactionMenuTabs() {
                     $("#BudgetTransactionMenuUl").append('<li><a href=javascript:approvalExpenseBudget() id="approvalExpenseBudgetMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Expense Budget Approval @ Department Head</span></a></li>');
                 }
                 $("#BudgetTransactionMenuUl").append('<li><a href=javascript:createDeptWiseBudgetExpense() id="createDeptWiseBudgetExpenseMaster" ><i class="fa fa-bold"></i><span class="submenu-title">Expense Budget Allocation @ Department</span></a></li>');
-             //   $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionExpenseBudget() id="extraProvisionexpense" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Expense</span></a></li>');
+                //   $("#BudgetTransactionMenuUl").append('<li><a href=javascript:extraProvisionExpenseBudget() id="extraProvisionexpense" ><i class="fa fa-bold"></i><span class="submenu-title">Extra Provision Expense</span></a></li>');
                 $("#budgetSanctionExpensessBudgetmasters,#approvalExpenseBudgetMaster,#extraProvisionexpense,#extraProvisionIncome,#budgetReAppropriationMaster,#createDeptWiseBudgetExpenseMaster,#displayBudgetIncomeTransactionMaster,#ConsolidateDepartmentIncome,#displayBudgetExpenseMaster,#ConsolidateDepartmentExpense,#budgetConsolidateIncomeBudgetmasters,#budgetConsolidateExpensessBudgetmasters,#incomeBudgetSanctionUniMaster,#createDeptWiseBudgetIncomeMaster,#createLocationWiseBudgetIncomeMaster,#displayBudgetExpenseMaster").click(function() {
                     $(this).parent().siblings().children("a").css("color", "white");
                     $(this).css("color", "red");

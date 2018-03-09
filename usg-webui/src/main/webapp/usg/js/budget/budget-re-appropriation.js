@@ -46,7 +46,7 @@ function budgetReAppropriation(divId) {
         $("#budgetReAppropriationBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="sector">Sector <span class="require">*</span></label><select class="form-control" name="sector" id="sector"></select><span id="sectorErr" class="text-danger"></span>'
                 + '</div><div class="form-group col-lg-6"><label for="budgetHead">Budget Head </label><select class="form-control" name="budgetHead" id="budgetHead"></select><span id="budgetHeadErr" class="text-danger"></span></div></div>');
         $("#budgetReAppropriationBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="budgetType">Budget Type <span class="require">*</span></label><select class="form-control" name="budgetType" id="budgetType"></select><span id="budgetTypeErr" class="text-danger"></span>'
-        + '</div><div class="form-group col-lg-6"><label for="department">Department <span class="require">*</span></label><select class="form-control" name="department" id="department"></select><span id="departmentErr" class="text-danger"></span></div></div>');
+                + '</div><div class="form-group col-lg-6"><label for="department">Department <span class="require">*</span></label><select class="form-control" name="department" id="department"></select><span id="departmentErr" class="text-danger"></span></div></div>');
         $("#budgetReAppropriationBodyDiv").append("<div class='form-group col-lg-12' id='budgetButton'><center><button id='showBudgetHead' onclick='validateBudgetReAppropriation()' class='btn btn-success'>Show Budget Heads</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button onclick=budgetReAppropriation() class='btn btn-warning' id='resetButton'>Reset</button></center></div>");
         var finyear = getFincialYearForAllReports();
         //ddoList();
@@ -128,7 +128,7 @@ function searchBudgetReAppropriation() {
             budgetType: budgetType,
             budgetHead: budgetHead,
             location: location,
-            department:department
+            department: department
         };
         $.get(server_base_url + "/budget/transactions/BudgetReAppropriation/Search", {
             searchObj: JSON.stringify(searchObj),
@@ -155,7 +155,7 @@ function searchBudgetReAppropriation() {
             data = JSON.parse(data);
 
             for (var i = data.length - 1; i >= 0; i--) {
-                var approvedAmount = parseInt(data[i].approvedAmount);
+                var approvedAmount = parseInt(data[i].approvedAmount) + parseInt(data[i].extraProvisionAmount);
 //                if (data[i].appropriationValue != null) {
 //                    console.log(data[i].appropriationValue)
 //                    approvedAmount = parseInt(approvedAmount) + parseInt(data[i].appropriationValue);
@@ -214,7 +214,7 @@ function BudgetReAppropriationTable() {
                 {
                     appropriationValue = checkedList[i].appropriationValue;
                 }
-                 var approvedAmount = parseInt(checkedList[i].approvedAmount);
+                var approvedAmount = parseInt(checkedList[i].approvedAmount) + parseInt(checkedList[i].extraProvisionAmount);
 //                if (checkedList[i].appropriationValue != null) {
 //                    console.log(checkedList[i].appropriationValue)
 //                    approvedAmount = parseInt(approvedAmount) + parseInt(checkedList[i].appropriationValue);

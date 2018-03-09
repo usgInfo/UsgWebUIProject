@@ -48,14 +48,15 @@ function displayBudgetIncomeTransaction() {
         $("#Row2Col2").append(getLabel("Budget Code", "") + "" + getInputwithErrSpan("budgetCode", "", "", ""));
         //
         getTwoColumnInRow("budgetIncomeFieldGroup", "Row4", "Row4Col1", "Row4Col2");
-        $("#Row4Col2").append(getLabel("Budget Type", "required") + "" + getDropDown("budgetType"));
+        $("#Row4Col2").append(getLabel("Department", "required") + "" + getDropDown("department", "", "", ""));
         $("#Row4Col1").append(getLabel("Budget Heads", "") + "" + getDropDown("budgetHead"));
 
         $("#sector").attr("onchange", " getBudgetHeads('budgetHead')");
         $("#fundType").attr("onchange", "clearSector()");
         //
         getTwoColumnInRow("budgetIncomeFieldGroup", "Row5", "Row5Col1", "Row5Col2");
-        $("#Row5Col2").append(getLabel("Department", "required") + "" + getDropDown("department", "", "", ""));
+
+        $("#Row5Col2").append(getLabel("Budget Type", "required") + "" + getDropDown("budgetType"));
         $("#Row5Col1").append(getLabel("Budget Date", "required") + "" + getInputwithErrSpan("budgetDate", "", "", "onkeypress='return false' "));
 
         var currentFinancialYear = getUserSessionElement(seCurrentFinancialYear);
@@ -209,12 +210,15 @@ function getBudgetHeads(divid)
 }
 function getAllSrNos(id)
 {
+    var budgetType = $("#budgetType").val();
+    $("#departmentErr").text("").val("");
     var ddo = $("#ddo").val();
     var fundType = $("#fundType").val();
     var sector = $("#sector").val();
     var location = $("#location").val();
     var finYear = $("#financialYear").val();
-    var budgetType = $("#budgetType").val();
+    var department = $("#department").val();
+
     $("#" + id).val("");
     $("#previousBudget").val("");
     if (location == "" || location == null)
@@ -222,6 +226,11 @@ function getAllSrNos(id)
         $("#location").focus();
         addSomeClass("budgetIncomeFieldDiv", "has-error");
         displaySmallErrorMessages("locationErr", "Please Select location");
+        $("#budgetType").val("");
+    } else if (department == "" || department == null)
+    {
+        displaySmallErrorMessages("departmentErr", "Please Select department");
+
         $("#budgetType").val("");
     } else
     {
@@ -231,7 +240,8 @@ function getAllSrNos(id)
             sector: sector,
             fundType: fundType,
             budgetType: budgetType,
-            financialYear: finYear
+            financialYear: finYear,
+            department: department
 
         }
         var Json = JSON.stringify(Json);
@@ -263,6 +273,7 @@ function getAllSrNos(id)
             }
         });
     }
+
 }
 function getLocationBasedonDDOIncome(name) {
 
@@ -330,25 +341,7 @@ function viewAllIncomeBudget(divId) {
             $("#viewList").append("<div class='table-responsive' id='budgetIncomeSubDiv2' />");
             $("#budgetIncomeSubDiv2").append("<table class='table table-striped table-bordered' id='budgetIncomeTable' />");
 
-            $("#budgetIncomeTable").append("<thead><tr id='budgetIncomeTableTrHead'>"
-                    + "<th class='sno_width'><i class='fa'></i>Select</th>"
-                    + "<th class='sno_width'> S.No</th>"
-                    + "<th class='sno_width'> Budget Seq.No</th>"
-                    //  + "<th class='table_col_width'><i class='fa'></i>BudgetHead</th>"
-                    + "<th class='table_col_width'><i class='fa'></i>Budget Type</th>"
-                    + "<th class='table_col_width'><i class='fa'></i>Financial Year</th>"
-                    + "<th class='table_col_width'><i class='fa'></i>Budget Date</th>"
-                    + "<th class='table_col_width'><i class='fa'></i>Sector</th>"
-                    + "<th class='table_col_width'><i class='fa'></i>Amount(In Lac)</th>"
-                    + "<th class='hidden'></th>"
-                    + "<th class='table_col_width'><i class='fa'></i>Extra Provision Amount(In Lac)</th>"
-                    + "</tr></thead>");
-            if (checkUserPrivelege(pvUpdateIncomeBudget)) {
-                $("#budgetIncomeTableTrHead").append("<th class='table_col_width'><i class='fa'></i>Edit</th>");
-            }
-            if (checkUserPrivelege(pvDeleteIncomeBudget)) {
-                $("#budgetIncomeTableTrHead").append("<th class='table_col_width'><i class='fa'></i>Delete</th>");
-            }
+
             $.get(server_base_url + "/budget/transaction/IncomeBudget/FetchAll", {
                 scrId: "Income",
                 ddo: getUserSessionElement(seDDOId),
@@ -371,6 +364,26 @@ function viewAllIncomeBudget(divId) {
                     if (pdata != null && pdata.length > 0) {
                         var sno = 0;
                         $("#budgetIncomeTable").append("<tbody id='budgetIncomeTableBody' />");
+                        $("#budgetIncomeTable").append("<thead><tr id='budgetIncomeTableTrHead'>"
+                                + "<th class='sno_width'><i class='fa'></i>Select</th>"
+                                + "<th class='sno_width'> S.No</th>"
+                                + "<th class='sno_width'> Budget Seq.No</th>"
+                                //  + "<th class='table_col_width'><i class='fa'></i>BudgetHead</th>"
+                                + "<th class='table_col_width'><i class='fa'></i>Budget Type</th>"
+                                + "<th class='table_col_width'><i class='fa'></i>Financial Year</th>"
+                                + "<th class='table_col_width'><i class='fa'></i>Budget Date</th>"
+                                + "<th class='table_col_width'><i class='fa'></i>Sector</th>"
+                                + "<th class='table_col_width'><i class='fa'></i>Amount(In Lac)</th>"
+                                + "<th class='hidden'></th>"
+                                + "<th class='table_col_width'><i class='fa'></i>Extra Provision Amount(In Lac)</th>"
+                                + "</tr></thead>");
+                        if (checkUserPrivelege(pvUpdateIncomeBudget)) {
+                            $("#budgetIncomeTableTrHead").append("<th class='table_col_width'><i class='fa'></i>Edit/View</th>");
+                        }
+                        if (checkUserPrivelege(pvDeleteIncomeBudget)) {
+                            $("#budgetIncomeTableTrHead").append("<th class='table_col_width'><i class='fa'></i>Delete</th>");
+                        }
+
                         for (var i = pdata.length - 1; i >= 0; i--) {
                             sno++;
                             var sentStatus = pdata[i].sentStatus;
@@ -401,6 +414,9 @@ function viewAllIncomeBudget(divId) {
                             }
                             assjson = JSON.stringify(assjson);
                             if (sentStatus == 'true') {
+
+
+
                                 $("#budgetIncomeTableBody").append("<tr id='" + pdata[i]._id.$oid + "' style='cursor:pointer;'>"
                                         + "<td><input type='checkbox' id='check1'  name='case3' disabled></td>"
                                         + "<td>" + sno + "</td>"
@@ -414,12 +430,36 @@ function viewAllIncomeBudget(divId) {
                                         + "<td style='cursor:pointer;'class='hidden'>" + pdata[i].ledgerId + "</td>"
                                         + "<td style='cursor:pointer;'>" + extraProvision + "</td></tr>");
                                 if (checkUserPrivelege(pvUpdateIncomeBudget)) {
-                                    $("#" + pdata[i]._id.$oid).append("<td style='cursor:pointer;'><i class='fa fa-edit'></i>&nbsp;&nbsp;<a  class='anchor_edit'>Edit</a></td>");
+                                    $("#" + pdata[i]._id.$oid).append("<td style='cursor:pointer;' onclick=editIncome('" + encodeURI(assjson) + "','" + pdata[i]._id.$oid + "','View')><i class='fa fa-edit'></i>&nbsp;&nbsp;<a  class='anchor_edit'>View</a></td>");
                                 }
                                 if (checkUserPrivelege(pvDeleteIncomeBudget)) {
                                     $("#" + pdata[i]._id.$oid).append("<td style='cursor:pointer;'><i class='fa fa-trash'></i>&nbsp;&nbsp;<a  class='anchor_delete'>Delete</a></td>");
                                 }
                             } else {
+
+//                                $("#budgetIncomeTable").append("<thead><tr id='budgetIncomeTableTrHead'>"
+//                                        + "<th class='sno_width'><i class='fa'></i>Select</th>"
+//                                        + "<th class='sno_width'> S.No</th>"
+//                                        + "<th class='sno_width'> Budget Seq.No</th>"
+//                                        //  + "<th class='table_col_width'><i class='fa'></i>BudgetHead</th>"
+//                                        + "<th class='table_col_width'><i class='fa'></i>Budget Type</th>"
+//                                        + "<th class='table_col_width'><i class='fa'></i>Financial Year</th>"
+//                                        + "<th class='table_col_width'><i class='fa'></i>Budget Date</th>"
+//                                        + "<th class='table_col_width'><i class='fa'></i>Sector</th>"
+//                                        + "<th class='table_col_width'><i class='fa'></i>Amount(In Lac)</th>"
+//                                        + "<th class='hidden'></th>"
+//                                        + "<th class='table_col_width'><i class='fa'></i>Extra Provision Amount(In Lac)</th>"
+//                                        + "</tr></thead>");
+//                                if (checkUserPrivelege(pvUpdateIncomeBudget)) {
+//                                    $("#budgetIncomeTableTrHead").append("<th class='table_col_width'><i class='fa'></i>Edit</th>");
+//                                }
+//                                if (checkUserPrivelege(pvDeleteIncomeBudget)) {
+//                                    $("#budgetIncomeTableTrHead").append("<th class='table_col_width'><i class='fa'></i>Delete</th>");
+//                                }
+
+
+
+
                                 $("#budgetIncomeTableBody").append("<tr id='" + pdata[i]._id.$oid + "' style='cursor:pointer;'>"
                                         + "<td><input type='checkbox' id='check1'  name='case3'></td>"
                                         + "<td>" + sno + "</td>"
@@ -433,7 +473,7 @@ function viewAllIncomeBudget(divId) {
                                         + "<td style='cursor:pointer;' class='hidden'>" + pdata[i].ledgerId + "</td>"
                                         + "<td style='cursor:pointer;'>" + extraProvision + "</td></tr>");
                                 if (checkUserPrivelege(pvUpdateIncomeBudget)) {
-                                    $("#" + pdata[i]._id.$oid).append("<td style='cursor:pointer;' onclick=editIncome('" + encodeURI(assjson) + "','" + pdata[i]._id.$oid + "')>" + "<i class='fa fa-edit'></i>&nbsp;&nbsp;<a  class='anchor_edit'>Edit</a></td>");
+                                    $("#" + pdata[i]._id.$oid).append("<td style='cursor:pointer;' onclick=editIncome('" + encodeURI(assjson) + "','" + pdata[i]._id.$oid + "','Edit')>" + "<i class='fa fa-edit'></i>&nbsp;&nbsp;<a  class='anchor_edit'>Edit</a></td>");
                                 }
                                 if (checkUserPrivelege(pvDeleteIncomeBudget)) {
                                     $("#" + pdata[i]._id.$oid).append("<td style='cursor:pointer;' onclick=deletePopUp('deleteIncomeBudgetData','viewAllIncomeBudget','" + pdata[i]._id.$oid + "')>" + '<i class="fa fa-trash"></i>&nbsp;&nbsp;<a  class="anchor_delete">Delete</a></td>');
@@ -452,7 +492,7 @@ function viewAllIncomeBudget(divId) {
     }
 }
 
-function editIncome(json, id)
+function editIncome(json, id, condition)
 {
     if (json == null || json == " " || json == undefined) {
         return false;
@@ -477,9 +517,16 @@ function editIncome(json, id)
     $("#sector").val(json.sector);
     // getBudgetHeads('budgetHead');
     $("#budgetHead").val(json.budgetHead);
-    setTimeout(function() {
-        searchLedgersForEdit(json.budgetHead, json.srNo);
-    }, 400);
+    if (condition == "View")
+    {
+        viewSubmitedLedgersIncome(json.budgetHead, json.srNo)
+    } else
+    {
+        setTimeout(function() {
+            searchLedgersForEdit(json.budgetHead, json.srNo);
+        }, 400);
+    }
+
 }
 function searchLedgersForEdit(budget, sno)
 {
@@ -572,6 +619,103 @@ function searchLedgersForEdit(budget, sno)
                             });
                         }
                         $("#associationSubDiv1").append("<center><button type='button'  value='Save' class='btn btn-success mr5' onclick='updateIncomeBudget()'>Update</button>&nbsp&nbsp&nbsp<button type='button'  value='Back' class='btn btn-warning bn mr5' onclick='BackIncomeBudget()'>Back</button></center>");
+
+                        $("#budgetUpdatesubTable").DataTable({
+                            paging: true
+                        });
+                    }
+                }
+
+            }
+        });
+    }
+}
+function viewSubmitedLedgersIncome(budget, sno)
+{
+    if (checkUserPrivelege(pvCreateIncomeBudget)) {
+        var ddo = $("#ddo").val();
+        var sector = $("#sector").val();
+        var fundType = $("#fundType").val();
+        var budgetType = $("#budgetType").val();
+        var location = $("#location").val();
+        var department = $("#department").val();
+        $.get(server_base_url + "/budget/transaction/IncomeBudget/getLedgersForEditBasedOnHeads", {
+            budgetHead: budget,
+            fundType: fundType,
+            budgetType: budgetType,
+            location: location,
+            finacialYear: $("#financialYear").val(),
+            ddo: ddo,
+            department: department,
+            srNo: sno,
+            scrId: "Income"
+        }).done(function(pdata)
+        {
+            $("#associationSubDiv1").text("");
+            if (pdata == fail)
+            {
+                displayLargeErrorMessages("pregsuccessBefore", "" + failMessage + "<br /><br />");
+                displayLargeErrorMessages("pregsuccessAfter", "" + failMessage + "<br /><br />");
+            } else if (pdata == unauthorized || pdata.statuscode == unauthorized) {
+                displayLargeErrorMessages("pregsuccessBefore", "" + unauthorizedMessage + "<br /><br />");
+                displayLargeErrorMessages("pregsuccessAfter", "" + unauthorizedMessage + "<br /><br />");
+            } else if (pdata == invalidSession) {
+                callSessionTimeout();
+            } else if (pdata == NoDataFoundMessage) {
+                displaySmallErrorMessagesInRed("pregsuccessBefore11", "" + NoDataFound + "<br /><br />");
+            } else {
+                if (pdata != null) {
+                    $("#associationpanelRow4").text("").append("<div id='associationSubDiv1' class = 'panel panel-primary-head'></div>");
+                    $("#associationSubDiv1").append("<table id='budgetUpdatesubTable' class='table table-striped table-bordered'></table>");
+                    $("#budgetUpdatesubTable").append("<thead><tr>"
+                            //     + " <th>" + '<input type="checkbox" style="width:15px;height:15px;align:center" id="selectall"/>All' + "</th>"
+                            + " <th> S.No</th>"
+                            + "<th style='min-width:30%;width:auto;'><i class='fa'></i>Ledger Name</th>"
+                            + "<th style='min-width:30%;width:auto;'><i class='fa'></i>Budget Head</th>"
+                            + "<th style='min-width:30%;width:auto;' class='hidden'><i class='fa'></i>Head Code</th>"
+                            + "<th style='min-width:30%;width:auto;'><i class='fa'></i>Previous actual Amount(In Lac)</th>"
+                            + "<th style='min-width:1%;width:80px;'><i class='fa'></i>Requested Amount(In Lac)<span class='require'>&nbsp;&nbsp*</span></th>"
+                            + "</tr></thead>");
+                    if (pdata.length > 0) {
+                        var sno = 0;
+                        $("#budgetUpdatesubTable").append("<tbody id='budgetUpdatesubTableBody' class='table-striped table-bordered' />");
+                        for (var i = pdata.length - 1; i >= 0; i--) {
+                            if (pdata[i].requestedAmount != 0)
+                            {
+                                sno++;
+                                var objJson = {
+                                    ledgerId: pdata[i]._id.$oid,
+                                    ledger: pdata[i].ledgerName,
+                                    fundType: pdata[i].FundType,
+                                    displayName: pdata[i].displayName,
+                                    budgetHeadCode: pdata[i].budgetHeadCode,
+                                    budgetHeadName: pdata[i].budgetHeadName,
+                                    underGroup: pdata[i].underGroup,
+                                    remarks: pdata[i].remarks,
+                                    status: pdata[i].status
+                                }
+                                objJson = JSON.stringify(objJson);
+                                var prevReqAmount = pdata[i].prevReqAmount;
+                                var budgetHeadName = pdata[i].budgetHeadName;
+                                if (budgetHeadName == undefined || budgetHeadName == "undefined") {
+                                    budgetHeadName = "";
+                                }
+                                if (prevReqAmount == undefined || prevReqAmount == "undefined") {
+                                    prevReqAmount = "0";
+                                }
+                                $("#budgetUpdatesubTableBody").append("<tr  id='" + pdata[i]._id.$oid + "'style='cursor:pointer;' >"
+                                        //   + "<td><input type='checkbox' value='" + sno + "' name='case'></td>"
+                                        + "<td>" + sno + "</td>"
+                                        + "<td style='cursor:pointer;'>" + pdata[i].ledger + "</td>"
+                                        + "<td style='cursor:pointer;'>" + budgetHeadName + "</td>"
+                                        + "<td style='cursor:pointer;'class='hidden'>" + pdata[i]._id.$oid + "</td>"
+                                        + "<td style='cursor:pointer;'>" + prevReqAmount + "<input type='hidden' id='rowId' value='" + sno + "'/></td>"
+                                        + "<td style='cursor:pointer;'><input type='text' onkeypress='return numericVal(event)' id='requestedAmount' value='" + pdata[i].requestedAmount + "'readonly/></td></tr>");
+
+
+                            }
+                        }
+                        //  $("#associationSubDiv1").append("<center><button type='button'  value='Save' class='btn btn-success mr5' onclick='updateIncomeBudget()'>Update</button>&nbsp&nbsp&nbsp<button type='button'  value='Back' class='btn btn-warning bn mr5' onclick='BackIncomeBudget()'>Back</button></center>");
 
                         $("#budgetUpdatesubTable").DataTable({
                             paging: true
@@ -1135,6 +1279,11 @@ function searchBudgetIncome() {
                                 status: pdata[i].status
                             }
                             objJson = JSON.stringify(objJson);
+                            var requestAMt = pdata[i].requestAmount;
+                            if (pdata[i].requestAmount != 0 && requestAMt != undefined)
+                            {
+                                amount = pdata[i].requestAmount;
+                            }
                             var prevReqAmount = pdata[i].prevReqAmount;
                             var budgetHeadName = pdata[i].budgetHeadName;
                             if (budgetHeadName == undefined || budgetHeadName == "undefined") {
@@ -1256,7 +1405,8 @@ function saveBudgetIncome() {
                     objJson: JSON.stringify(checkedrowList),
                     ddo: ddo,
                     location: location,
-                    year: financialYear
+                    year: financialYear,
+                    budgetType: budgetType
                 }).done(function(data) {
                     //alert(data);
                     if (data == fail) {

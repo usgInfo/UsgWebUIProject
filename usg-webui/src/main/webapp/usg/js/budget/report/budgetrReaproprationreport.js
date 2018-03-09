@@ -45,7 +45,7 @@ function budgetReAppropriationReport(divId) {
                 + '</div><div class="form-group col-lg-6"><label for="fundType">Fund Type <span class="require">*</span></label><select class="form-control" name="fundType" id="fundType"></select><span id="fundTypeErr" class="text-danger"></span></div></div>');
 
         $("#budgetReAppropriationBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="sector">Sector <span class="require">*</span></label><select class="form-control" name="sector" id="sector"></select><span id="sectorErr" class="text-danger"></span>'
-                + '</div><div class="form-group col-lg-6"><label for="budgetHead">Budget Head <span class="require">*</span></label><select class="form-control" name="budgetHead" id="budgetHead"></select><span id="budgetHeadErr" class="text-danger"></span></div></div>');
+                + '</div><div class="form-group col-lg-6"><label for="budgetHead">Budget Head <span class="require"></span></label><select class="form-control" name="budgetHead" id="budgetHead"></select><span id="budgetHeadErr" class="text-danger"></span></div></div>');
         $("#budgetReAppropriationBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="budgetType">Budget Type <span class="require">*</span></label><select class="form-control" name="budgetType" id="budgetType"></select><span id="budgetTypeErr" class="text-danger"></span></div></div>');
         $("#budgetReAppropriationBodyDiv").append("<div class='form-group col-lg-12' id='budgetButton'><center><button id='showBudgetHead' onclick='validateBudgetReAppropriationRepo()' class='btn btn-success'>Show Budget Heads</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button onclick=budgetReAppropriationReport() class='btn btn-warning' id='resetButton'>Reset</button></center></div>");
         var finyear = getFincialYearForAllReports();
@@ -96,12 +96,12 @@ function validateBudgetReAppropriationRepo() {
         displaySmallErrorMessages("budgetTypeErr", "Please Select Budget Type");
         result = 0;
     }
-    if (budgetHead == "" || budgetHead == null || budgetHead == "0") {
-        $("#budgetHead").focus();
-        addSomeClass("budgetIncomeFieldDiv", "has-error");
-        displaySmallErrorMessages("budgetHeadErr", "Please Select Budget Head");
-        result = 0;
-    }
+//    if (budgetHead == "" || budgetHead == null || budgetHead == "0") {
+//        $("#budgetHead").focus();
+//        addSomeClass("budgetIncomeFieldDiv", "has-error");
+//        displaySmallErrorMessages("budgetHeadErr", "Please Select Budget Head");
+//        result = 0;
+//    }
 
     if (result != 0) 
     {

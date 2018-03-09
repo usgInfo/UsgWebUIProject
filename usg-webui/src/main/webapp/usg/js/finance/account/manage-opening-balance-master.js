@@ -48,7 +48,120 @@ function manageOpeningBalanceMaster(divId) {
         var parentLedgerId = $("#ledgerNameSelect").val();
         var parentLedgerName = $("#ledgerNameSelect option:selected").text();
         var finYearId = $("#financialYearSelect").val();
-        manageOpeningListTable(parentLedgerId, parentLedgerName, finYearId);
+        var budgetType = "";
+        var ledgerCategory = "";
+        var sanctionedStatus = "";
+        var extraProvisionStatus = "";
+        var sanctionedAmount = 0;
+        var extraProvisionAmount = 0;
+        var finalAmount = 0.00;
+        var budTypeDrCr = "";
+        $.get(server_base_url + "financial/account/CheckBudgetTypeLedger", {
+            ledger: parentLedgerId
+        }).done(function (bdata) {
+                var mainData = bdata.result;
+        budgetType = (mainData.budgetType).toLowerCase();
+            if(budgetType != null && budgetType != undefined && budgetType == "yes"){
+                $.get(server_base_url + "financial/account/CheckLedgerCategory", {
+            ledger: parentLedgerId
+        }).done(function (bdata) {
+                var mainData = bdata.result; 
+//        ledgerCategory = mainData.ledgerCategory;alert("ledgerCategory category "+mainData);
+            for (var i = mainData.length - 1; i >= 0; i--){
+                var ledCategory = mainData[i];
+                var ledCategoryData = JSON.stringify(ledCategory);
+                ledgerCategory = mainData[i].ledgerCategory;
+            }
+        
+        
+            if(ledgerCategory != null && ledgerCategory != undefined && ledgerCategory == "Income"){
+                $.get(server_base_url + "financial/account/GetSanctionedAndExtraProvisionFromIncomeBudget", {
+            ledger: parentLedgerId, finYear: finYearId
+        }).done(function (bdata) {
+            var statusCode = bdata.statuscode;    
+            
+        if(statusCode == success){
+        var mainData = bdata.result; 
+//        ledgerCategory = mainData.ledgerCategory;alert("ledgerCategory category "+mainData);
+            for (var i = mainData.length - 1; i >= 0; i--){
+                sanctionedAmount = 0;
+                extraProvisionAmount = 0;
+                budTypeDrCr = "Cr"
+                var incomeBudget = mainData[i];
+                var incomeBudgetData = JSON.stringify(incomeBudget);
+                sanctionedStatus = (mainData[i].isSanctioned).toLowerCase();
+                extraProvisionStatus = (mainData[i].isExtraProvisioned).toLowerCase();
+                if(sanctionedStatus == "true"){
+                    sanctionedAmount = mainData[i].sanctionedAmount;
+                    sanctionedAmount = sanctionedAmount *100000;
+                }
+                if(extraProvisionStatus == "true"){
+                    extraProvisionAmount = mainData[i].extraProvisionAmount;
+                    extraProvisionAmount = extraProvisionAmount * 100000;
+                }
+            
+            finalAmount = finalAmount + sanctionedAmount + extraProvisionAmount;
+            }
+        }else{
+            sanctionedStatus = "false";
+            extraProvisionStatus = "false";
+            sanctionedAmount = 0;
+            extraProvisionAmount = 0;
+        }
+//        finalAmount = sanctionedAmount + extraProvisionAmount;
+        displayDetailsForBudgetType(parentLedgerName, budTypeDrCr, finalAmount);    
+        });
+                
+                
+            }
+            if (ledgerCategory != null && ledgerCategory != undefined && ledgerCategory == "Expense") {
+//                manageOpeningListTable(parentLedgerId, parentLedgerName, finYearId);
+                $.get(server_base_url + "financial/account/GetSanctionedAndExtraProvisionFromBudgetExpense", {
+            ledger: parentLedgerId, finYear: finYearId
+        }).done(function (bdata) {
+            var statusCode = bdata.statuscode;    
+            
+        if(statusCode == success){
+        var mainData = bdata.result; 
+//        ledgerCategory = mainData.ledgerCategory;alert("ledgerCategory category "+mainData);
+            for (var i = mainData.length - 1; i >= 0; i--){
+                sanctionedAmount = 0;
+                extraProvisionAmount = 0;
+                budTypeDrCr = "Dr"
+                var expenseBudget = mainData[i];
+                var expenseBudgetData = JSON.stringify(expenseBudget);
+                sanctionedStatus = (mainData[i].isSanctioned).toLowerCase();
+                extraProvisionStatus = (mainData[i].isExtraProvisioned).toLowerCase();
+                if(sanctionedStatus == "true"){
+                    sanctionedAmount = mainData[i].sanctionedAmount;
+                    sanctionedAmount = sanctionedAmount *100000;
+                }
+                if(extraProvisionStatus == "true"){
+                    extraProvisionAmount = mainData[i].extraProvisionAmount;
+                    extraProvisionAmount = extraProvisionAmount * 100000;
+                }
+            
+            finalAmount = finalAmount + sanctionedAmount + extraProvisionAmount;
+            }
+        }else{
+            sanctionedStatus = "false";
+            extraProvisionStatus = "false";
+            sanctionedAmount = 0;
+            extraProvisionAmount = 0;
+        }
+        
+//        finalAmount = sanctionedAmount + extraProvisionAmount;
+        displayDetailsForBudgetType(parentLedgerName, budTypeDrCr, finalAmount);    
+        });
+            }
+        });
+//        displayDetailsForBudgetType(parentLedgerName, budTypeDrCr, finalAmount);
+            }
+            
+            if (budgetType != null && budgetType != undefined && budgetType == "no") {
+                manageOpeningListTable(parentLedgerId, parentLedgerName, finYearId);
+            }
+        });
 
 
     });
@@ -517,4 +630,57 @@ function getGroupNatureMOB(groupId)
         }
     });
     return result;
+}
+
+function displayDetailsForBudgetType(ledgerName, drOrCr, openingBalance){
+    if (drOrCr == "Dr")
+                    {
+                        $("#manageOpeningBlnListMainMenu").text("").append('<div id="manageOpeningBlnListPanel" class="panel panel-blue" />');
+                        $("#manageOpeningBlnListPanel").append('<div id="manageOpeningBlnListHeading" class="panel-heading" />');
+                        $("#manageOpeningBlnListHeading").append('<div class="panel-title"  data-toggle="collapse" style="font-weight:bold;font-size:15px;" data-parent="#accordion2" ><center>Manage Opening Balance</center><div class="pull-right" style="position: relative;bottom: 15px;cursor:pointer;" id="manageOpeningBalanceColDiv"><span class="glyphicon glyphicon-minus-sign"></span></div></div>');
+                        $("#manageOpeningBlnListPanel").append('<div id="collapseOne2" class="panel-collapse collapse in pal" />');
+                        $("#manageOpeningBalanceColDiv").click(function () {
+                            $("#collapseOne2").toggle();
+                            if ($("#manageOpeningBalanceColDiv span").hasClass("glyphicon-minus-sign")) {
+                                $("#manageOpeningBalanceColDiv").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
+                            } else {
+                                $("#manageOpeningBalanceColDiv").text("").append("<span class='glyphicon glyphicon-minus-sign'></span>");
+                            }
+                        });
+                        $("#collapseOne2").append('<div id="manageOpeningBlnListBody" class = "panel-body pan" />');
+                        $("#manageOpeningBlnListBody").append('<div id="panelRow" class="row" />');
+                        $("#manageOpeningBlnListBody").append('<div id="manageOpeningBlnListErrorMsgId" />');
+                        $("#manageOpeningBlnListBody").append('<div id="manageOpeningBlnListMainBody" class="table-responsive" />');
+                        $("#manageOpeningBlnListMainBody").append('<table id="manageOpeningBlnTable" class="table table-striped table-bordered table-hover" />');
+                        $("#manageOpeningBlnTable").append('<thead id="manageOpeningBlnTableHeadId" />');
+                        $("#manageOpeningBlnTable").append('<tbody id="manageOpeningBlnTableBodyId" />');
+                        $("#manageOpeningBlnTableHeadId").append('<tr><th>Sno</th><th>Ledger Name</th><th>Dr/Cr</th><th>Opening Balance(Amount)</th></tr>');
+//                        $("#manageOpeningBlnTableBodyId").append('<tr><td>1</td><td>' + ledgerName + '</td><td><select id="amountTypeSelect"><option>Dr</option><option>Cr</option></select></td><td><input type="text" readonly="readonly" id="openingBalanceAmt" value= ' + parseFloat(openingBalance).toFixed(2) + '></td></tr>');
+                        $("#manageOpeningBlnTableBodyId").append('<tr><td>1</td><td>' + ledgerName + '</td><td>Dr</td><td>' + parseFloat(openingBalance).toFixed(2) + '</td></tr>');
+                    } else
+                    {
+                        $("#manageOpeningBlnListMainMenu").text("").append('<div id="manageOpeningBlnListPanel" class="panel panel-blue" />');
+                        $("#manageOpeningBlnListPanel").append('<div id="manageOpeningBlnListHeading" class="panel-heading" />');
+                        $("#manageOpeningBlnListHeading").append('<div class="panel-title"  data-toggle="collapse" style="font-weight:bold;font-size:15px;" data-parent="#accordion2" ><center>Manage Opening Balance</center><div class="pull-right" style="position: relative;bottom: 15px;cursor:pointer;" id="manageOpeningBalanceColDiv1"><span class="glyphicon glyphicon-minus-sign"></span></div></div>');
+                        $("#manageOpeningBlnListPanel").append('<div id="collapseOne3" class="panel-collapse collapse in pal" />');
+                        $("#manageOpeningBalanceColDiv1").click(function () {
+                            $("#collapseOne3").toggle();
+                            if ($("#manageOpeningBalanceColDiv1 span").hasClass("glyphicon-minus-sign")) {
+                                $("#manageOpeningBalanceColDiv1").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
+                            } else {
+                                $("#manageOpeningBalanceColDiv1").text("").append("<span class='glyphicon glyphicon-minus-sign'></span>");
+                            }
+                        });
+                        $("#collapseOne3").append('<div id="manageOpeningBlnListBody" class = "panel-body pan" />');
+                        $("#manageOpeningBlnListBody").append('<div id="panelRow" class="row" />');
+                        $("#manageOpeningBlnListBody").append('<div id="manageOpeningBlnListErrorMsgId" />');
+                        $("#manageOpeningBlnListBody").append('<div id="manageOpeningBlnListMainBody" class="table-responsive" />');
+                        $("#manageOpeningBlnListMainBody").append('<table id="manageOpeningBlnTable" class="table table-striped table-bordered table-hover" />');
+                        $("#manageOpeningBlnTable").append('<thead id="manageOpeningBlnTableHeadId" />');
+                        $("#manageOpeningBlnTable").append('<tbody id="manageOpeningBlnTableBodyId" />');
+                        $("#manageOpeningBlnTableHeadId").append('<tr><th>Sno</th><th>Ledger Name</th><th>Dr/Cr</th><th>Opening Balance(Amount)</th></tr>');
+//                        $("#manageOpeningBlnTableBodyId").append('<tr><td>1</td><td>' + ledgerName + '</td><td><select id="amountTypeSelect"><option>Cr</option><option>Dr</option></select></td><td><input type="text" readonly="readonly" id="openingBalanceAmt" value= ' + parseFloat(openingBalance).toFixed(2) + '></td></td></tr>');
+                        $("#manageOpeningBlnTableBodyId").append('<tr><td>1</td><td>' + ledgerName + '</td><td>Cr</td><td>' + parseFloat(openingBalance).toFixed(2) + '</td></td></tr>');
+                    }
+    
 }

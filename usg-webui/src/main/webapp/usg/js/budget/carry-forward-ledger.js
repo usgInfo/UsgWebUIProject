@@ -23,7 +23,7 @@ function carryForwardLedger(divId) {
     $("#carryForwardLedgerMainPanel").append('<div id="carryForwardLedgerMainHeading" class="panel-heading" />');
     $("#carryForwardLedgerMainHeading").append('<class="panel-title" data-toggle="collapse" style="font-weight:bold;font-size:15px;" data-parent="#accordion2"><center>Carry Forward Ledger Master</center><div class="pull-right" style="position: relative;bottom: 15px;cursor:pointer;" id="carryForwardLedgerCollp"><span class="glyphicon glyphicon-minus-sign"></span></div>');
     $("#carryForwardLedgerMainPanel").append('<div id="collapseOne1" class="panel-collapse collapse in pal" />');
-    $("#carryForwardLedgerCollp").click(function () {
+    $("#carryForwardLedgerCollp").click(function() {
         $("#collapseOne1").toggle();
         if ($("#carryForwardLedgerCollp span").hasClass("glyphicon-minus-sign")) {
             $("#carryForwardLedgerCollp").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
@@ -44,12 +44,12 @@ function carryForwardLedger(divId) {
 
     $("#carryForwardLedgerBalanceBodyDiv").append("<div class='form-group'><center><button id='searchCarryForwardButton' class='btn btn-success' style='height:40px;width:80px'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button onclick=resetCarryForwardInfo() class='btn btn-warning' style='height:40px;width:80px'>Reset</button></center></div>");
 
-    setTimeout(function () {
+    setTimeout(function() {
         fetchLedgerForBudget('ledgerId');
     }, 200);
     getFromAndToFinancialYear();
 
-    $("#searchCarryForwardButton").click(function (e) {
+    $("#searchCarryForwardButton").click(function(e) {
         var parentLedgerId = $("#ledgerId").val();
         var parentLedgerName = $("#ledgerId option:selected").text();
         var financialYearId = $("#financialYearId").val();
@@ -68,7 +68,7 @@ function resetCarryForwardInfo() {
 function getFromAndToFinancialYear()
 {
     $.get(server_base_url + "budget/master/FinancialYear/View", {
-    }).done(function (pdata) {
+    }).done(function(pdata) {
         if (pdata == fail || pdata == unauthorized || pdata.statuscode == unauthorized || pdata == invalidSession || pdata == statusException) {
         } else {
             if (pdata != null) {
@@ -108,7 +108,7 @@ function fetchLedgerBalance(parentLedgerId, parentLedgerName) {
     $("#carryForwardLedgerListPanel").append('<div id="carryForwardLedgerListHeading" class="panel-heading" />');
     $("#carryForwardLedgerListHeading").append('<div class="panel-title" a data-toggle="collapse" style="font-weight:bold;font-size:15px;" data-parent="#accordion2" href="#collapseOne2"><center>Carry Forward Ledger Balance List</center><div class="pull-right" style="position: relative;bottom: 15px;cursor:pointer;" id="carryForwardLedgerColDiv1"><span class="glyphicon glyphicon-minus-sign"></span></div></div>');
     $("#carryForwardLedgerListPanel").append('<div id="collapseOne3" class="panel-collapse collapse in pal" />');
-    $("#carryForwardLedgerColDiv1").click(function () {
+    $("#carryForwardLedgerColDiv1").click(function() {
         $("#collapseOne3").toggle();
         if ($("#carryForwardLedgerColDiv1 span").hasClass("glyphicon-minus-sign")) {
             $("#carryForwardLedgerColDiv1").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
@@ -123,7 +123,7 @@ function fetchLedgerBalance(parentLedgerId, parentLedgerName) {
     $("#carryForwardLedgerListMainBody").append('<table id="carryForwardLedgerTable" class="table table-striped table-bordered table-hover" />');
     $("#carryForwardLedgerTable").append('<thead id="carryForwardLedgerHeadId" />');
     $("#carryForwardLedgerTable").append('<tbody id="carryForwardLedgerBodyId" />');
-    $("#carryForwardLedgerHeadId").append('<tr><th>Sno</th><th>Ledger Name</th><th>Amount Type</th><th>Opening Balance(Amount)</th><th>Total Cr Amount</th><th>Total Dr Amount</th><th>Closing Balance</th><th>Update</th></tr>');
+    $("#carryForwardLedgerHeadId").append('<tr><th>Sno</th><th>Ledger Name</th><th>Amount Type</th><th>Opening Balance(Amount)</th><th>Total Cr Amount</th><th>Total Dr Amount</th><th>Remaining Amount</th><th>Update</th></tr>');
 
     var locationId = getUserSessionElement(seLocationId);
     var ddoId = getUserSessionElement(seDDOId);
@@ -140,7 +140,7 @@ function fetchLedgerBalance(parentLedgerId, parentLedgerName) {
         locationId: locationId,
         fromDate: fromDateStr,
         toDate: toDateStr
-    }).done(function (data) {
+    }).done(function(data) {
         var mainData = JSON.stringify(data);
         mainData = JSON.parse(mainData);
         if (mainData.statuscode == NoData) {
@@ -201,7 +201,7 @@ function updateLedgerBalance(mainData) {
     $.get(server_base_url + "/finance/account/CarryForward/Update", {
         carryForwardJson: JSON.stringify(carryForwardJson),
         userId: loginId
-    }).done(function (data) {
+    }).done(function(data) {
         if (data.statuscode == fail) {
             displaySmallErrorMessagesInRed("carryForwardLedgerListErrorMsgId", failMessage + "");
         } else if (data == unauthorized || data.statuscode == unauthorized) {
@@ -214,7 +214,7 @@ function updateLedgerBalance(mainData) {
             displaySmallErrorMessagesInRed("carryForwardLedgerListErrorMsgId", "No User available" + "");
         } else if (data.result != null) {
             displaySuccessMessages("carryForwardLedgerListErrorMsgId", "Ledger Is Successfully Updated to Manage Opening Balance");
-            setTimeout(function () {
+            setTimeout(function() {
                 carryForwardLedgerBalance();
             }, 3000);
         }
@@ -225,15 +225,31 @@ function updateLedgerBalance(mainData) {
 function fetchLedgerForBudget(divId) {
     $("#" + divId).text("").append("<option value=''>----Select Ledger Name----</option>");
     $.get(server_base_url + "/Budget/CarryForward/LedgerList/View", {
-    }).done(function (data) {
+    }).done(function(data) {
         if (data == fail || data == unauthorized) {
 //            location.href = "dashboard.jsp";
+        }
+        if (data == 404 || data == "404") {
+            displayErrorMessages("carryForwardLedgerBalanceMessageDiv", "No Data in Ledger Dropdown");
         } else if (data == invalidSession) {
             callSessionTimeout();
         } else {
 //            var mainData = JSON.parse(data)
             for (var i = 0; i < data.length; i++) {
-                $("#" + divId).append("<option  value='" + data[i].idStr + "' >" + data[i].ledgerName + "(" + data[i].ledgerCode + ")" + "</option>");
+                var ledgerName = data[i].ledgerName;
+                if (ledgerName == undefined || ledgerName == "undefined") {
+                    ledgerName == "";
+                }
+                var ledgerCode = data[i].ledgerCode;
+                if (ledgerCode == undefined || ledgerCode == "undefined") {
+                    ledgerCode == "";
+                }
+                var ledgerId = data[i].idStr;
+                if (ledgerId == undefined || ledgerId == "undefined") {
+                    ledgerId == "";
+                }
+
+                $("#" + divId).append("<option  value='" + ledgerId + "' >" + ledgerName + "(" + ledgerCode + ")" + "</option>");
             }
         }
     });

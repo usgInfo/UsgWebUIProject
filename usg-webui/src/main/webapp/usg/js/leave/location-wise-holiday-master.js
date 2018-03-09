@@ -53,16 +53,16 @@ function createLocationWiseHolidaysMaterForm(divId) {
     <button type='button' id='locationwiseholidayResetButton' onclick='wipeAllLocationWisementData()' class='btn btn-warning mr5' name='reset' value='reset'>Reset</button></center></div>");
 
 
-  $("input").on("keypress", function (e) {
-            if (e.which === 32 && !this.value.length)
-                e.preventDefault();
-        });
+    $("input").on("keypress", function(e) {
+        if (e.which === 32 && !this.value.length)
+            e.preventDefault();
+    });
 
 
-        $("textarea").on("keypress", function (e) {
-            if (e.which === 32 && !this.value.length)
-                e.preventDefault();
-        });
+    $("textarea").on("keypress", function(e) {
+        if (e.which === 32 && !this.value.length)
+            e.preventDefault();
+    });
 
     $("#locationwiseholidaymainTabMenu").append("<div id='locationwiseholidayTypetableHeader'/>");
 
@@ -75,7 +75,7 @@ function appendHolidayLocation(name) {
 
     $.post(server_base_url + "/Leave/LeaveManagement/LocationWiseHolidayMaster/GetLocationBasedOnDDo", {
         ddo: getUserSessionElement(seDDOId)
-    }).done(function (pdata) {
+    }).done(function(pdata) {
 
         var bdata = JSON.parse(pdata)
         if (bdata != null) {
@@ -134,7 +134,7 @@ function displayHolidayLocationwiseTable() {
     $("#locationwiseupdateholidayListPanelTableMainDiv").append("<div  id='tablesuccessBefore1'/>");
     $("#locationwiseupdateholidayListPanelTableMainDiv").append("<div id='locationwiseupdateholidayMastertableresponsiveDiv' class='table-responsive' />");
     $("#locationwiseupdateholidayMastertableresponsiveDiv").append('<table id="example2" class="table table-bordered">');
-    
+
     $("#example2").append("<thead class=''><tr>"
 
             + "<th>S.No</th>"
@@ -149,7 +149,7 @@ function displayHolidayLocationwiseTable() {
 
     $.get(server_base_url + "leavemanagement/locationWiseHoliday/View", {
         ddo: getUserSessionElement(seDDOId)
-    }).done(function (data) {
+    }).done(function(data) {
 
         if (JSON.parse(data) === unauthorized) {
             displayErrorMessages("tablesuccessBefore1", "" + unauthorizedMessage, "");
@@ -193,7 +193,7 @@ function viewLocationWiseHolidayMasterReport(primaryId, location, year)
 
     var fromDate = $("#fromdateVal").val();
     var toDate = $("#todateVal").val();
-    
+
     $("#locationwiseholidayTypetableHeader").text("");
     $("#locationWiseHolidayReportMenu").text("").append("<iframe  class ='panel-body pan' id='iframe' style='border:1px solid #666CCC' title='PDF in an i-Frame' scrolling='auto' src=" + server_base_url + 'Leave/LeaveManagement/LocationwiseHolidayMasterReport?id=' + primaryId + '&location=' + location + '&year=' + year1 + '&financialyearStart=' + fromDate + '&financialyearEnd=' + toDate + " height='500px' width='100%'></iframe>");
 
@@ -201,16 +201,16 @@ function viewLocationWiseHolidayMasterReport(primaryId, location, year)
 
 //----------------------delete-------------------------------
 function deleteLocationwiseHolidayMaster(id) {
-   
+
     deleteLocationwiseHolidayLocationdata(id);
-   
+
 }
 
 function deleteLocationwiseHolidayMaster(id) {
 
     $.post(server_base_url + "leavemanagement/locationwiseholidaymaster/Delete", {
         id: id
-    }).done(function (data) {
+    }).done(function(data) {
 
         if (data == fail) {
             displaySmallErrorMessagesInRed("tablesuccessBefore1", "Invalid username / password" + "<br/><br/>");
@@ -224,7 +224,7 @@ function deleteLocationwiseHolidayMaster(id) {
             displaySmallErrorMessagesInRed("tablesuccessBefore1", "No User available" + "<br/><br/>");
         } else {
             displaySuccessMessages("tablesuccessBefore1", deleteMessage, "");
-            setTimeout(function () {
+            setTimeout(function() {
                 displayLocationWiseHolidaysMaster("dashboardBodyMainDiv");
             }, 2100);
 
@@ -359,10 +359,10 @@ function updateLocationwiseHolidayMaster(obj, id, location, year) {
             endDate: $("#todateVal").val()
         });
     }
-    setTimeout(function () {
+    setTimeout(function() {
         var continuationSNO = existingHolidayIds.length;
         $.post(server_base_url + "/leavemanagement/commonholidaysmaster/FetchAll", {})
-                .done(function (rdata) {
+                .done(function(rdata) {
                     rdata = JSON.parse(rdata);
                     if (!validateResponseData(rdata, "")) {
                         var data = rdata;
@@ -500,14 +500,14 @@ function updateLocationwiseHolidayMasterData() {
                 toDate: $(TableRows[i]).find('td:eq(7) input').val()
             });
             var count = 1;
-            for(var j = 0; j < i; j++)
+            for (var j = 0; j < i; j++)
             {
-                if(($(TableRows[i]).find('td:eq(6) input').val() == $(TableRows[j]).find('td:eq(6) input').val()) && ($(TableRows[i]).find('td:eq(7) input').val() == $(TableRows[j]).find('td:eq(7) input').val()))
+                if (($(TableRows[i]).find('td:eq(6) input').val() == $(TableRows[j]).find('td:eq(6) input').val()) && ($(TableRows[i]).find('td:eq(7) input').val() == $(TableRows[j]).find('td:eq(7) input').val()))
                 {
                     count++;
-                    
+
                 }
-                if(count > 2)
+                if (count > 2)
                 {
                     alertPopUpMessage("Same From Date and To Date should not be equal for more than two");
                     $("#locationwiseholidaySaveButton").attr("disabled", false);
@@ -530,7 +530,7 @@ function updateLocationwiseHolidayMasterData() {
         year: year,
         objId: id,
         userId: getUserSessionElement("userId")
-    }).done(function (data) {
+    }).done(function(data) {
         if (data === fail) {
             locationwiseEnableButton();
             displayErrorMessages("pregsuccessBefore", failMessage, "");
@@ -549,13 +549,13 @@ function updateLocationwiseHolidayMasterData() {
         } else if (data == "success") {
             scrolupfunction();
             displaySuccessMessages("pregsuccessBefore", updateMessage, "");
-            setTimeout(function () {
+            setTimeout(function() {
                 displayLocationWiseHolidaysMaster("dashboardBodyMainDiv");
             }, 2100);
 
         } else if (JSON.parse(data) == "duplicate") {
             displayErrorMessages("pregsuccessBefore", existed + "");
-            setTimeout(function () {
+            setTimeout(function() {
                 displayLocationWiseHolidaysMaster();
             }, 3000);
         }
@@ -690,7 +690,7 @@ function saveLocationwiseHolidayMaster(tableId, showErrorInDivId) {
             $("#locationwiseholidayResetButton1").attr("disabled", false);
             return false;
         }
-        
+
         if (fromDates != "" && todates != "") {
             tablearray.push({
                 commonHolidayId: $(TableRows[i]).find('td:eq(0) input').val(),
@@ -704,14 +704,14 @@ function saveLocationwiseHolidayMaster(tableId, showErrorInDivId) {
 
             });
             var count = 1;
-            for(var j = 0; j < i; j++)
+            for (var j = 0; j < i; j++)
             {
-                if(($(TableRows[i]).find('td:eq(6) input').val() == $(TableRows[j]).find('td:eq(6) input').val()) && ($(TableRows[i]).find('td:eq(7) input').val() == $(TableRows[j]).find('td:eq(7) input').val()))
+                if (($(TableRows[i]).find('td:eq(6) input').val() == $(TableRows[j]).find('td:eq(6) input').val()) && ($(TableRows[i]).find('td:eq(7) input').val() == $(TableRows[j]).find('td:eq(7) input').val()))
                 {
                     count++;
-                    
+
                 }
-                if(count > 2)
+                if (count > 2)
                 {
                     alertPopUpMessage("Same From Date and To Date should not be equal for more than two");
                     $("#locationwiseholidaySaveButton").attr("disabled", false);
@@ -730,7 +730,7 @@ function saveLocationwiseHolidayMaster(tableId, showErrorInDivId) {
         locationWiseHoliday: holidayLocation,
         year: year,
         userId: getUserSessionElement("userId")
-    }).done(function (data) {
+    }).done(function(data) {
 
         if (data === fail) {
             locationwiseEnableButton();
@@ -749,7 +749,7 @@ function saveLocationwiseHolidayMaster(tableId, showErrorInDivId) {
             displaySmallErrorMessagesInRed("pregsuccessBefore", "No User available" + "<br/><br/>");
         } else if (JSON.parse(data) === "duplicate") {
             displayErrorMessages("pregsuccessBefore", existed + "");
-            setTimeout(function () {
+            setTimeout(function() {
                 displayLocationWiseHolidaysMaster();
             }, 3000);
         } else {
@@ -757,12 +757,12 @@ function saveLocationwiseHolidayMaster(tableId, showErrorInDivId) {
             var holidayLocation = $("#holidayLocation").val();
             var year = $("#year").val();
             viewLocationWiseHolidayMasterDate(holidayLocation, year);
-            setTimeout(function () {
+            setTimeout(function() {
                 locationwiseEnableButton();
             }, 2100);
             scrolupfunction();
             displaySuccessMessages("pregsuccessBefore", successMessage, "");
-            setTimeout(function () {
+            setTimeout(function() {
                 displayLocationWiseHolidaysMaster("dashboardBodyMainDiv");
             }, 2100);
 
@@ -800,7 +800,7 @@ function dropdownTableData(holidayLocation, year) {
 var commonHolidayId = [];
 function populateLocationWiseTableWithCommonAndHolidayType() {
     $.post(server_base_url + "/leavemanagement/commonholidaysmaster/FetchAll", {})
-            .done(function (rdata) {
+            .done(function(rdata) {
                 rdata = JSON.parse(rdata);
                 if (!validateResponseData(rdata, "")) {
                     var data = rdata;
@@ -900,7 +900,7 @@ function viewLocationWiseHolidayMasterDate(holidayLocation, year) {
     $("#locationwiseholidayListPanelTableMainDiv").append("<div  id='tablesuccessBefore'/>");
     $("#locationwiseholidayListPanelTableMainDiv").append("<div id='locationwiseholidayMastertableresponsiveDiv1' class='table-responsive' />");
     $("#locationwiseholidayMastertableresponsiveDiv1").append('<table id="listOfHolidaysHeadingRow" class="table table-striped table-bordered table-hover">');
-  
+
 
     $("#listOfHolidaysHeadingRow").append("<thead><tr>"
 
@@ -923,7 +923,7 @@ function viewLocationWiseHolidayMasterDate(holidayLocation, year) {
     $.post(server_base_url + "/leavemanagement/locationwiseholidaymaster/View", {
         holidaylocation: holidayLocation,
         year: year
-    }).done(function (rdata) {
+    }).done(function(rdata) {
 
         $("#locationwiseupdateholidayMasterTableBody").empty();
         rdata = JSON.parse(rdata);
@@ -934,8 +934,8 @@ function viewLocationWiseHolidayMasterDate(holidayLocation, year) {
 }
 
 function removeAllRowsFromTable() {
-    
-    $("#locationwiseholidayMasterTableBody tr").each(function () {
+
+    $("#locationwiseholidayMasterTableBody tr").each(function() {
         var row = $(this).closest('tr');
         row.find('td:eq(6) input').val("");
         row.find('td:eq(7) input').val("");
@@ -951,7 +951,7 @@ function removeAllRowsFromTable() {
 function validateTableDates(id) {
 
     var isInvalid = false;
-    $("#" + id + " tr").each(function () {
+    $("#" + id + " tr").each(function() {
         var row = $(this).closest('tr');
         var fromDate = row.find('td:eq(5) input').val();
         var toDate = row.find('td:eq(6) input').val();
@@ -968,7 +968,7 @@ function validateTableDates(id) {
 function fetchYearListForLocationWiseHolidayMaster() {
     $.get(server_base_url + "/Leave/FinancialYear/View", {
         value: "view"
-    }).done(function (pdata) {
+    }).done(function(pdata) {
         pdata = JSON.parse(pdata)
         if (pdata != null && pdata != 501 && pdata != "501" && pdata != "500")
         {
@@ -994,6 +994,6 @@ function fetchYearListForLocationWiseHolidayMaster() {
 function convertDateToMillis(date1) {
     var fromDates = date1.split("/");
     var fromdt = new Date(fromDates[1] + "/" + fromDates[0] + "/" + fromDates[2]);
-    var n = fromdt.getUTCMilliseconds();
+    var n = fromdt.getTime();
     return n;
 }

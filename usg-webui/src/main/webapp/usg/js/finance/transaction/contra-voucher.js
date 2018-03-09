@@ -25,7 +25,7 @@ function contraVoucherMaster(divId) {
     $.post(server_base_url + "financial/transaction/ContraVoucher/NewVoucherNumber", {
         ddoCode: ddoCode,
         locationCode: locationCode
-    }).done(function(data) {
+    }).done(function (data) {
         var val = data[0].voucherNo;
         vouchenovalue = vouchenovalue + val;
         $("#voucherNo").val(vouchenovalue);
@@ -58,7 +58,7 @@ function contraVoucherMaster(divId) {
         $("#firstPanelHeading").append("<h4 id='tableHeader1' class='panel-title' />");
         $("#tableHeader1").append("<div class='panel-title' a data-toggle='collapse' style='font-weight:bold;font-size:15px;' data-parent='#accordion2' ><center>Contra Voucher</center></div><div class='pull-right' style='position: relative;bottom: 15px;cursor:pointer;' id='colfinContraVoucher'><span class='glyphicon glyphicon-minus-sign'></span></div>");
         $("#FirstPanel").append("<div id='collapseOne2' class='panel-collapse collapse in' />");
-        $("#colfinContraVoucher").click(function() {
+        $("#colfinContraVoucher").click(function () {
             $("#collapseOne2").toggle();
             if ($("#colfinContraVoucher span").hasClass("glyphicon-minus-sign")) {
                 $("#colfinContraVoucher").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
@@ -98,7 +98,7 @@ function contraVoucherMaster(divId) {
             startDate: fromFinacialYear,
             endDate: toFinacialYear
         });
-        $("#voucherDate").keypress(function(event) {
+        $("#voucherDate").keypress(function (event) {
             event.preventDefault();
         });
         $("#voucherdateerr").append("<span id='voucherDateErr'></span>");
@@ -113,7 +113,7 @@ function contraVoucherMaster(divId) {
         viewContraVoucherAddList('receiptVoucherlistAddpanelRow');
         addContralVoucherRows("displayReceiptVoucherAddTableBody");
         $("#panelMainBody").append("<div id='panelRow4' class='row' />");
-        $("#panelRow4").append("<div  class='col-xs-3' /><div class='col-xs-3'><button type='button' style='margin-left:10px' value='Add' id='addButtonatSave' class='btn btn-success mr5 pull-right' onclick=addContralVoucherRows('displayReceiptVoucherAddTableBody')>Add</button></div>");
+//        $("#panelRow4").append("<div  class='col-xs-3' /><div class='col-xs-3'><button type='button' style='margin-left:10px' value='Add' id='addButtonatSave' class='btn btn-success mr5 pull-right' onclick=addContralVoucherRows('displayReceiptVoucherAddTableBody')>Add</button></div>");
         $("#panelRow4").append("<div  class='col-xs-3' id='addbuttonmsg' />");
         $("#panelMainBody").append("<div id='panelRow3' class='row' />");
         $("#panelRow3").append("<label class='col-sm-2'>Total Dr Amount(Rs)</label><input type='text'  id='totalDrAmount'  value='0' class='col-sm-2' readonly/>");
@@ -195,7 +195,7 @@ function contraVoucherMaster(divId) {
         $("#maritalListPanelHeading").append("<h4 id='firstHeader1' class='panel-title' />");
         $("#firstHeader1").append("<div class='panel-title' a data-toggle='collapse' style='font-weight:bold;font-size:15px;' data-parent='#accordion2' href='#collapseOne3'><center>List of Contra Voucher(s)</center><div class='pull-right' style='position: relative;bottom: 15px;cursor:pointer;' id='colfincontraVoucherSearch'><span class='glyphicon glyphicon-minus-sign'></span></div></div>");
         $("#maritalListPanel").append("<div id='collapseOne3' class='panel-collapse collapse in' />");
-        $("#colfincontraVoucherSearch").click(function() {
+        $("#colfincontraVoucherSearch").click(function () {
             $("#collapseOne3").toggle();
             if ($("#colfincontraVoucherSearch span").hasClass("glyphicon-minus-sign")) {
                 $("#colfincontraVoucherSearch").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
@@ -207,19 +207,19 @@ function contraVoucherMaster(divId) {
         $("#listpanelMainBody").append("<div id='listpanelRow' class='row' />");
         $("#listpanelMainBody").append("<div id='ErrorMessageDiv1'  />");
     }
-    setTimeout(function() {
+    setTimeout(function () {
         viewOptionIdName("budget/master/FundType/View", "", "description", "fundType", "Fund Type");
     }, 200);
 //    setTimeout(function () {
 //        getDDOforContraVoucher("", "DDO");
 //    }, 200);
-    setTimeout(function() {
+    setTimeout(function () {
         viewOption("hrms/common/BudgetHead/View", "", "budgetHead", "budgetHead", "Budget Head");
     }, 300);
-    setTimeout(function() {
+    setTimeout(function () {
         fetchLedgerCategoryForContraVoucher("", "ledgerCategory", "Ledger Category");
     }, 400);
-    setTimeout(function() {
+    setTimeout(function () {
         viewContraVoucherListMaster('listpanelRow');
     }, 200);
 
@@ -231,7 +231,7 @@ function getNarrationListinContra(name)
 
     $.get(server_base_url + "/finance/transactions/GetNarrationTypeForVouchers", {
         VocherName: "Contra Voucher"
-    }).done(function(pdata) {
+    }).done(function (pdata) {
         var mainData = JSON.parse(pdata);
         if (pdata != null) {
             $("#narrationType").text("").append("<option value='' selected>---- Select Narration Type ----</option>");
@@ -257,7 +257,7 @@ function getShortdescnarrationContra()
 
     var narrationId = $("#narrationType").val();
     $.get(server_base_url + "/financial/account/Naration/ViewList", {
-    }).done(function(pdata) {
+    }).done(function (pdata) {
         var mainData = pdata.result;
         if (pdata != null) {
             for (var i = mainData.length - 1; i >= 0; i--) {
@@ -328,7 +328,7 @@ function addChequeDetailRowContra(DivId, chequeNo, chequeDate, chequeBankName, c
             startDate: fromFinacialYear,
             endDate: toFinacialYear
         });
-        $("#chequeDate").keypress(function(event) {
+        $("#chequeDate").keypress(function (event) {
             event.preventDefault();
         });
         $("#chequeDetailsRowFieldGroup2").append('<div class="col-lg-12"><div class="form-group col-lg-6" id="infavourerr"><label for="">In Favor Of <span class="require">*</span> </label><input type="text" onkeypress="return validatealphanumeric(event)" id="inFavorOf" value="' + inFavorOf + '" class="form-control" >'
@@ -368,6 +368,21 @@ function addChequeDetailRowContra(DivId, chequeNo, chequeDate, chequeBankName, c
 
 function addContralVoucherRows(DivId, ledgerList)
 {
+
+    var totalDrAmount = $('#totalDrAmount').val();
+    var totalCrAmount = $("#totalCrAmount").val();
+
+    totalDrAmount = parseFloat(totalDrAmount);
+    totalCrAmount = parseFloat(totalCrAmount);
+
+    if (totalDrAmount > 0.0 || totalCrAmount > 0.0) {
+
+        if (totalDrAmount === totalCrAmount) {
+            return false;
+        }
+
+    }
+
     var sno = 0;
     $('#addbuttonmsg').text("").val("");
     if (($('#totalDrAmount').val() == $('#totalCrAmount').val()) && ($('#totalDrAmount').val() != undefined && $('#totalCrAmount').val() != 0))
@@ -392,13 +407,13 @@ function addContralVoucherRows(DivId, ledgerList)
                         + "<td style='cursor:pointer;'>" + sno + "</td>"
                         + "<td style='cursor:pointer;'><select  type='text' onChange=disablefunctionForDrCrForContraVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "') id='" + drCrId + "' ></select></td>"
                         + "<td style='cursor:pointer;'><select  type='text' name='group' id='" + groupId + "' onchange=getLedgerListForContra('" + groupId + "','" + ledgerId + "') ></select> <br><select  type='text' name='ledger' id='" + ledgerId + "'></select></td>"
-                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' onkeypress='return isNumberKeyValidation(this,event) type='text' placeholder='Dr.Amount'  value='" + ledgerList[i].drAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
-                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' onkeypress='return isNumberKeyValidation(this,event) type='text' placeholder='Cr.Amount'  value='" + ledgerList[i].crAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' onkeypress='return isNumberKeyValidation(this,event)'; onchange=addContraVoucherRows('displayReceiptVoucherAddTableBody');  type='text' placeholder='Dr.Amount'  value='" + ledgerList[i].drAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' onkeypress='return isNumberKeyValidation(this,event)'; onchange=addContraVoucherRows('displayReceiptVoucherAddTableBody');  type='text' placeholder='Cr.Amount'  value='" + ledgerList[i].crAmount + "'></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
                         + "<td style='cursor:pointer;'><input type=''text' id='" + narrationId + "' placeholder='Short Narration' class='form-control' value='" + ledgerList[i].shortNarration + "'></td>"
                         + "<td style='cursor:pointer;'  id='" + ids + "'>" + ' <button type="button" class="btn mr5 btn-primary" onclick=deleteContraVoucherListRow(this.parentNode.parentNode.rowIndex,"' + drAmountId + '","' + crAmountId + '") style="align:center;color:white">DELETE</button>' + "</td>"
                         + "</tr></thead>");
 
-                $("#displayReceiptVoucherAddTableBody").on('keydown', "#" + narrationId, function(e) {
+                $("#displayReceiptVoucherAddTableBody").on('keydown', "#" + narrationId, function (e) {
                     var keyCode = e.keyCode || e.which;
                     if (keyCode == 9) {
                         //e.preventDefault();
@@ -410,16 +425,16 @@ function addContralVoucherRows(DivId, ledgerList)
                 getGroupListForOptionsContra(ledgerList[i].group, groupId, "Group", drCrId);
                 getLedgerListForContra(groupId, ledgerId, ledgerList[i].ledger, ledgerList[i].group);
                 getHardCodedOptionsContraVoucher(ledgerList[i].DrCr, drCrId);
-                $('.drAmount').keyup(function() {
+                $('.drAmount').keyup(function () {
                     var sum = 0;
-                    $('.drAmount').each(function() {
+                    $('.drAmount').each(function () {
                         sum += Number($(this).val());
                     });
                     $('#totalDrAmount').val(sum);
                 });
-                $('.crAmount').keyup(function() {
+                $('.crAmount').keyup(function () {
                     var sum1 = 0;
-                    $('.crAmount').each(function() {
+                    $('.crAmount').each(function () {
                         sum1 += Number($(this).val());
                     });
                     $('#totalCrAmount').val(sum1);
@@ -444,18 +459,18 @@ function addContralVoucherRows(DivId, ledgerList)
                         + "<td style='cursor:pointer;'>" + numberofRows + "</td>"
                         + "<td style='cursor:pointer;'><select  type='text' onChange=disablefunctionForDrCrForContraVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "') id='" + drCrId + "' ><option val='' selected disabled>---- Select ----</option><option value='Dr'>Dr</option><option  value='Cr'>Cr</option></select></td>"
                         + "<td style='cursor:pointer;'><select  type='text' name='group' id='" + groupId + "' onchange=getLedgerListForContra('" + groupId + "','" + ledgerId + "')></select> <br><select  type='text' name='ledger' id='" + ledgerId + "'></select></td>"
-                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type=''text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
-                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type=''text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type=''text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);'  onchange=addContralVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type=''text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);'  onchange=addContralVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
                         + "<td style='cursor:pointer;'><input type='text' id='shortNarration1' placeholder='Short Narration'  class='form-control'></td>"
                         + "<td style='cursor:pointer;'><button type='button' class='btn mr5 btn-default'  style='align:center;color:white'>DELETE</button></td>");
 
-                $("#displayReceiptVoucherAddTableBody").on('keydown', '#shortNarration1', function(e) {
-                    var keyCode = e.keyCode || e.which;
-                    if (keyCode == 9) {
-                        //e.preventDefault();
-                        // call custom function here
-                        addContralVoucherRows('displayReceiptVoucherAddTableBody');
-                    }
+                $("#displayReceiptVoucherAddTableBody").on('keydown', '#shortNarration1', function (e) {
+//                    var keyCode = e.keyCode || e.which;
+//                    if (keyCode == 9) {
+                    //e.preventDefault();
+                    // call custom function here
+//                        addContralVoucherRows('displayReceiptVoucherAddTableBody');
+//                    }
                 });
 
             } else
@@ -464,8 +479,8 @@ function addContralVoucherRows(DivId, ledgerList)
                         + "<td style='cursor:pointer;'>" + numberofRows + "</td>"
                         + "<td style='cursor:pointer;'><select  type='text' onChange=disablefunctionForDrCrForContraVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "') id='" + drCrId + "' ><option val='' selected disabled>---- Select ----</option><option value='Dr'>Dr</option><option  value='Cr'>Cr</option></select></td>"
                         + "<td style='cursor:pointer;'><select  type='text' name='group' id='" + groupId + "' onchange=getLedgerListForContra('" + groupId + "','" + ledgerId + "')></select> <br><select  type='text' name='ledger' id='" + ledgerId + "'></select></td>"
-                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type=''text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
-                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type=''text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);' disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + drAmountId + "' class='drAmount form-control' type=''text' placeholder='Dr.Amount' onkeypress='return isNumberKeyValidation(this,event);'  onchange=addContraVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
+                        + "<td style='cursor:pointer;'><input id='" + crAmountId + "' class='crAmount form-control' type=''text' placeholder='Cr.Amount' onkeypress='return isNumberKeyValidation(this,event);'  onchange=addContraVoucherRows('displayReceiptVoucherAddTableBody'); disabled></td>" //onblur=checkDrCrAmountAndAddEntryForVoucher('" + drCrId + "')
                         + "<td style='cursor:pointer;'><input type='text' id='shortNarration1' placeholder='Short Narration'  class='form-control'></td>"
                         + "<td style='cursor:pointer;'><button type='button' class='btn mr5 btn-primary' onclick=deleteReceiptVoucherListRow(this.parentNode.parentNode.rowIndex,'" + drAmountId + "','" + crAmountId + "')  style='align:center;color:white'>DELETE</button></td>");
             }
@@ -473,16 +488,16 @@ function addContralVoucherRows(DivId, ledgerList)
             $("#" + id).append("</tr></thead>");
             $("#" + drCrId).attr("onchange", "getGroupListForOptionsContra('','" + groupId + "', 'Group','" + drCrId + "');disablefunctionForDrCrForContraVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "')");
             getGroupListForOptionsContra("", groupId, "Group");
-            $('.drAmount').keyup(function() {
+            $('.drAmount').keyup(function () {
                 var sum = 0;
-                $('.drAmount').each(function() {
+                $('.drAmount').each(function () {
                     sum += Number($(this).val());
                 });
                 $('#totalDrAmount').val(sum);
             });
-            $('.crAmount').keyup(function() {
+            $('.crAmount').keyup(function () {
                 var sum1 = 0;
-                $('.crAmount').each(function() {
+                $('.crAmount').each(function () {
                     sum1 += Number($(this).val());
                 });
                 $('#totalCrAmount').val(sum1);
@@ -553,22 +568,22 @@ function addRowContraUpdateinVouchers(DivId)
         $("#" + drCrId).attr("onchange", "getGroupListForOptionsContra('','" + groupId + "', 'Group','" + drCrId + "');disablefunctionForDrCrForContraVoucher('" + drCrId + "','" + drAmountId + "','" + crAmountId + "')");
         getGroupListForOptionsContra("", groupId, "Group");
 
-        $('.drAmount').keyup(function() {
+        $('.drAmount').keyup(function () {
             var sum = 0;
-            $('.drAmount').each(function() {
+            $('.drAmount').each(function () {
                 sum += Number($(this).val());
             });
             $('#totalDrAmount').val(sum);
         });
-        $('.crAmount').keyup(function() {
+        $('.crAmount').keyup(function () {
             var sum1 = 0;
-            $('.crAmount').each(function() {
+            $('.crAmount').each(function () {
                 sum1 += Number($(this).val());
             });
             $('#totalCrAmount').val(sum1);
         });
     }
-    setTimeout(function()
+    setTimeout(function ()
     {
         $('#addbuttonmsg').text("").val("");
     }, 3000);
@@ -586,7 +601,7 @@ function getLedgerListForContra(id, ledgerId, ledgerval, groupid)
 
     $.get(server_base_url + "/financial/Transaction/ReceiptVoucher/GetLedger", {
         group: group
-    }).done(function(pdata) {
+    }).done(function (pdata) {
 
         if (pdata != "500" && pdata != 500 && pdata != "" && pdata != null)
         {
@@ -634,7 +649,7 @@ function disablefunctionForDrCrForContraVoucher(drCrId, drAmountId, crAmountId) 
 
 }
 function  editThisContraVoucherRow(i) {
-    $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+    $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
 
         if ($(this).find("tr:eq(" + i + ")")) {
             var j = i - 1;
@@ -666,7 +681,7 @@ function deleteContraVoucherListRow(i, dramount, cramount) {
             document.getElementById('displayReceiptVoucherAddTableBody').deleteRow(i - 1)
         }
         var slNo = 1;
-        $('table#displayReceiptVoucherAddTable tbody tr').each(function(i) {
+        $('table#displayReceiptVoucherAddTable tbody tr').each(function (i) {
 
             var row = $(this).closest('tr');
             //alert(row.find('td:eq(0)').val());
@@ -688,7 +703,7 @@ function resetContraVoucherList()
 function  viewContraVoucherAddList(DivId) {
 
     $("#" + DivId).text("").append("<div class='tab-pane' id='viewReceiptVoucherAdd'/>");
-    $("#viewReceiptVoucherAdd").append("<div><h4>&nbsp;&nbsp;Note: Please press tab to generate next row or click on Add Button to generate next row (rows will generate until DR=CR)</h4></div>");
+//    $("#viewReceiptVoucherAdd").append("<div><h4>&nbsp;&nbsp;Note: Please press tab to generate next row or click on Add Button to generate next row (rows will generate until DR=CR)</h4></div>");
     $("#viewReceiptVoucherAdd").append("<div class='table-responsive' id='viewReceiptVoucherAddTableDiv' />");
     $("#viewReceiptVoucherAddTableDiv").append("<table class='table table-bordered table-striped table-warning mb30' id='displayReceiptVoucherAddTable' />");
     $("#displayReceiptVoucherAddTable").append("<thead class=''><tr>"
@@ -715,7 +730,7 @@ function contraVoucherValidation() {
 
     if (paymentMode == "Cheque") {
         var temp = 0;
-        $('table#displayPaymentTable1 tbody tr').each(function() {
+        $('table#displayPaymentTable1 tbody tr').each(function () {
             temp++;
         });
         if (temp > 0) {
@@ -780,7 +795,7 @@ function contraVoucherValidation() {
     } else if (paymentMode == "Bank") {
         var temp = 0;
 
-        $('table#displayPaymentTable tbody tr').each(function() {
+        $('table#displayPaymentTable tbody tr').each(function () {
             temp++;
         });
         if (temp > 0) {
@@ -907,7 +922,7 @@ function contraVoucherValidation() {
 
         scrolupfunction();
         displayErrorMessages("pregsuccessBefore", " Both Credit and Debit should be same");
-        setTimeout(function() {
+        setTimeout(function () {
             $("#pregsuccessBefore").focus();
             $("#pregsuccessBefore").text("");
         }, 3000);
@@ -925,13 +940,13 @@ function contraVoucherValidation() {
             result = 0;
         }
     }
-    $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+    $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
         if ($(this).find('td:eq(2) select[name="group"]').val() == undefined || $(this).find('td:eq(2) select[name="group"]').val() == "" || $(this).find('td:eq(2) select[name="ledger"]').val() == undefined || $(this).find('td:eq(2) select[name="ledger"]').val() == "") {
             result = 2;
         }
 
     });
-    $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+    $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
         var drcr = $(this).find('td:eq(1) select ').val();
         if (drcr == "Dr") {
             if ($(this).find('td:eq(3) input').val() == undefined || $(this).find('td:eq(3) input').val() == "") {
@@ -943,7 +958,7 @@ function contraVoucherValidation() {
             }
         }
     });
-    $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+    $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
 
         if ($(this).find('td:eq(1) select ').val() == "" || $(this).find('td:eq(1) select ').val() == undefined || $(this).find('td:eq(1) select ').val() == null) {
 
@@ -965,23 +980,23 @@ function contraVoucherValidation() {
         }
     } else if (result == 5) {
         displayErrorMessages("pregsuccessBefore", "Please fill ledger amount details", "");
-        setTimeout(function() {
+        setTimeout(function () {
             $("#pregsuccessBefore").text("");
         }, 1500);
     } else if (result == 2) {
 
         displayErrorMessages("pregsuccessBefore", "Please fill all mandatory fields", "");
-        setTimeout(function() {
+        setTimeout(function () {
             $("#pregsuccessBefore").text("");
         }, 1500);
     } else if (result == 3) {
         displayErrorMessages("pregsuccessBefore", "Please enter Debit(Dr) Amount", "");
-        setTimeout(function() {
+        setTimeout(function () {
             $("#pregsuccessBefore").text("");
         }, 1500);
     } else if (result == 4) {
         displayErrorMessages("pregsuccessBefore", "Please enter Credit(Cr) Amount", "");
-        setTimeout(function() {
+        setTimeout(function () {
             $("#pregsuccessBefore").text("");
         }, 1500);
     }
@@ -989,7 +1004,7 @@ function contraVoucherValidation() {
 
 function getRowsLengthForContraVoucher() {
     var HowManyRows = 0;
-    $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+    $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
         HowManyRows++;
     });
     return HowManyRows;
@@ -1004,7 +1019,7 @@ function getLocationBasedOnDDOInContraVoucher(name, ddoId) {
     $.get(server_base_url + "hrms/employee/Employee/GetDropDownValues", {
         ddo: ddo,
         condition: getLocationBasedOnDdo
-    }).done(function(pdata) {
+    }).done(function (pdata) {
 
         if (pdata != "500" && pdata != 500 && pdata != "" && pdata != null)
         {
@@ -1028,7 +1043,7 @@ function getLocationBasedOnDDOInContraVoucher(name, ddoId) {
 function saveContraVoucherDetails() {
     if (checkUserPrivelege(pvCreateContraVoucher)) {
         var ledgerList = [];
-        $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+        $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
             ledgerList.push({
                 DrCr: $(this).find('td:eq(1) select ').val(),
                 group: $(this).find('td:eq(2) select[name="group"]').val(),
@@ -1043,7 +1058,7 @@ function saveContraVoucherDetails() {
 
         var temp = 0;
         var chequeList = [];
-        $('table#displayPaymentTable1 tbody tr').each(function() {
+        $('table#displayPaymentTable1 tbody tr').each(function () {
             temp++;
             chequeList.push({
                 chequeNo: $(this).find('td:eq(0)').text(),
@@ -1056,7 +1071,7 @@ function saveContraVoucherDetails() {
         });
 
         var bankPaymentList = [];
-        $('table#displayPaymentTable tbody tr').each(function() {
+        $('table#displayPaymentTable tbody tr').each(function () {
             bankPaymentList.push({
                 transferMode: $(this).find('td:eq(0)').text(),
                 bankAccountNo: $(this).find('td:eq(1)').text(),
@@ -1116,7 +1131,7 @@ function saveContraVoucherDetails() {
             userid: getUserSessionElement("userId"),
             ddoId: $("#DDO").val(),
             locationId: $("#location").val(),
-        }).done(function(data) {
+        }).done(function (data) {
 
             if (data == fail) {
                 displaySmallErrorMessages("pregsuccessBefore", "Invalid username / password" + "<br/><br/>");
@@ -1131,7 +1146,7 @@ function saveContraVoucherDetails() {
             } else {
                 scrolupfunction();
                 displaySuccessMessages("pregsuccessBefore", successMessage, "");
-                setTimeout(function() {
+                setTimeout(function () {
                     contraVoucherMaster("dashBoardBodyMainDiv");
                 }, 1500);
             }
@@ -1166,7 +1181,7 @@ function validatealphanumeric(key) {
 
 function fetchLedgerCategoryForContraVoucher(name, DivId, message) {
     $.get(server_base_url + "financial/common/LedgerCategory/ListForOptions", {
-    }).done(function(bpdata) {
+    }).done(function (bpdata) {
         bpdata = JSON.parse(bpdata);
         if (bpdata != null) {
             $("#" + DivId).append("<option value='' selected disabled>---- Select " + message + "----</option>");
@@ -1185,7 +1200,7 @@ function fetchLedgerCategoryForContraVoucher(name, DivId, message) {
 }
 function getGroupListForOptionsContra(name, DivId, message, drcrId) {
     $.get(server_base_url + "/financial/account/GroupMaster/ViewList", {
-    }).done(function(data) {
+    }).done(function (data) {
         if (data != null) {
 
             var sno = 0;
@@ -1239,7 +1254,7 @@ function viewContraVoucherListMaster(DivId) {
         var ddoLocationMap = {DDO: $("#DDO").val(), location: $("#location").val()};
 
         $.get(server_base_url + "/financial/transaction/ContraVoucher/ViewList", {
-            filter: JSON.stringify(ddoLocationMap)}).done(function(bdata) {
+            filter: JSON.stringify(ddoLocationMap)}).done(function (bdata) {
 
             if (bdata == fail) {
                 $("#ErrorMessageDiv1").text("").append("<center><div class='col-sm-12'  style='color:red;'><strong>No Data Available..<strong></div></center>");
@@ -1309,7 +1324,7 @@ function deleteContraVoucher(objId) {
         $.post(server_base_url + "/financial/transaction/ContraVoucher/Delete", {
             cvId: objId,
             userid: getUserSessionElement("userId")
-        }).done(function(data) {
+        }).done(function (data) {
             if (data == fail) {
                 displaySmallErrorMessages("pregsuccessBefore", "Invalid username / password");
             } else if (data == unauthorized || data.statuscode == unauthorized) {
@@ -1324,7 +1339,7 @@ function deleteContraVoucher(objId) {
 
                 scrolupfunction();
                 displaySuccessMessages("pregsuccessBefore", deleteSuccessMessage, "");
-                setTimeout(function() {
+                setTimeout(function () {
                     contraVoucherMaster("dashBoardBodyMainDiv");
                 }, 1500);
             }
@@ -1333,7 +1348,8 @@ function deleteContraVoucher(objId) {
 }
 
 function  updateContraVoucher(obj) {
-
+    $('#totalDrAmount').val("");
+    $("#totalCrAmount").val("");
     var numberofRows = 0;
     obj = decodeURI(obj);
     obj = JSON.parse(obj);
@@ -1352,7 +1368,7 @@ function  updateContraVoucher(obj) {
     $("#saveorupdate").val("update");
     $("#displayBankTableBody tr").css("background-color", "white");
     $("#displayBankTableBody tr" + "#" + obj.objId).css("background-color", "rgba(10, 129, 156, 0.3)");
-    setTimeout(function() {
+    setTimeout(function () {
         fetchLedgerCategoryForContraVoucher(obj.ledgerCategory);
         $("#ledgerCategory option:contains(" + obj.ledgerCategory + ")").attr('selected', 'selected');
     }, 5000);
@@ -1429,16 +1445,16 @@ function  updateContraVoucher(obj) {
 
     $("#panelRow5").text("").append("<div  class='col-xs-12'><center><button type='button' style='margin-left:10px' value='Save' class='btn btn-success mr5 ' onclick='contraVoucherValidation()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' onclick=contraVoucherMaster('dashBoardBodyMainDiv') class='btn btn-warning mr5 ' name='reset' value='reset'>Back</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' style='margin-left:10px' value='Delete' class='btn btn-danger mr5' onclick=deletePopUp('deleteContraVoucher','updateContraVoucher','" + obj.objId + "')>Delete</button></center></div>");
     //$("#panelRow5").text("").append("<div  class='col-xs-12'><center><button type='button' style='margin-left:10px' value='Save' class='btn btn-success mr5 ' onclick='receiptVoucherValidation()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' onclick=receiptVoucherMaster('dashBoardBodyMainDiv') class='btn btn-warning mr5 ' name='reset' value='reset'>Back</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' style='margin-left:10px' value='Delete' class='btn btn-danger mr5'  onclick=deletePopUp('deleteReceiptVoucher','updateReceiptVoucher','" + obj.objId + "')>Delete</button></center></div>");
-    setTimeout(function() {
+    setTimeout(function () {
         viewOptionIdName("budget/master/FundType/View", obj.fundType, "description", "fundType", "Fund Type");
     }, 400);
-    setTimeout(function() {
+    setTimeout(function () {
         getDDOforContraVoucher(obj.DDO, "DDO");
     }, 400);
-    setTimeout(function() {
+    setTimeout(function () {
         getLocationBasedOnDDOInContraVoucher(obj.location, obj.DDO);
     }, 4000);
-    setTimeout(function() {
+    setTimeout(function () {
         viewOptionsInUpdateforBudgetHead("hrms/common/BudgetHead/View", obj.budgetHead, "budgetHead", "budgetHead", "Budget Head");
     }, 400);
 //    viewOptionIdName("financial/common/LedgerCategory/ListForOptions", obj.ledgerCategory, "ledgerCategory", "ledgerCategory", "Ledger Category");
@@ -1450,7 +1466,7 @@ function  updateContraVoucher(obj) {
 function updateContraVoucherDetails() {
     var rvId = $("#objId").val();
     var ledgerList = [];
-    $('table#displayReceiptVoucherAddTable tbody tr').each(function() {
+    $('table#displayReceiptVoucherAddTable tbody tr').each(function () {
         ledgerList.push({
             DrCr: $(this).find('td:eq(1) select ').val(),
             group: $(this).find('td:eq(2) select[name="group"]').val(),
@@ -1465,7 +1481,7 @@ function updateContraVoucherDetails() {
 
     var temp = 0;
     var chequeList = [];
-    $('table#displayPaymentTable1 tbody tr').each(function() {
+    $('table#displayPaymentTable1 tbody tr').each(function () {
         temp++;
         chequeList.push({
             chequeNo: $(this).find('td:eq(0)').text(),
@@ -1478,7 +1494,7 @@ function updateContraVoucherDetails() {
     });
 
     var bankPaymentList = [];
-    $('table#displayPaymentTable tbody tr').each(function() {
+    $('table#displayPaymentTable tbody tr').each(function () {
         bankPaymentList.push({
             transferMode: $(this).find('td:eq(0)').text(),
             bankAccountNo: $(this).find('td:eq(1)').text(),
@@ -1524,7 +1540,7 @@ function updateContraVoucherDetails() {
         contraVoucherJson: JSON.stringify(ContraVoucherJson),
         userid: getUserSessionElement("userId"),
         cvId: rvId
-    }).done(function(data) {
+    }).done(function (data) {
         if (data == fail) {
             displaySmallErrorMessages("pregsuccessBefore", "Invalid username / password" + "<br/><br/>");
         } else if (data == unauthorized || data.statuscode == unauthorized) {
@@ -1539,7 +1555,7 @@ function updateContraVoucherDetails() {
 
             scrolupfunction();
             displaySuccessMessages("pregsuccessBefore", updateSuccessMessage, "");
-            setTimeout(function() {
+            setTimeout(function () {
                 contraVoucherMaster("dashBoardBodyMainDiv");
             }, 1500);
         }
@@ -1549,7 +1565,7 @@ function updateContraVoucherDetails() {
 function getFinancialFundTypeOptionsForContraVoucher(name, DivId, message)
 {
     $.get(server_base_url + "financial/common/FundType/ViewList", {
-    }).done(function(bdata) {
+    }).done(function (bdata) {
 //        bdata=JSON.parse(bdata);
         if (bdata != null) {
             $("#" + DivId).append("<option value = '' selected disabled>---- Select " + message + " ----</option>");
@@ -1572,7 +1588,7 @@ function SearchContraVoucher() {
         $("#searchListPanelHeading").append("<h4 id='SearchfirstHeader' class='panel-title' />");
         $("#SearchfirstHeader").append("<div class='panel-title' a data-toggle='collapse' style='font-weight:bold;font-size:15px;' data-parent='#accordion2' href='#collapseOne4'><center>Search Contra Voucher</center><div class='pull-right' style='position: relative;bottom: 15px;cursor:pointer;' id='colfinContraVoucherSearch'><span class='glyphicon glyphicon-minus-sign'></span></div></div>");
         $("#searchListPanel").append("<div id='collapseOne4' class='panel-collapse collapse in' />");
-        $("#colfinContraVoucherSearch").click(function() {
+        $("#colfinContraVoucherSearch").click(function () {
             $("#collapseOne4").toggle();
             if ($("#colfinContraVoucherSearch span").hasClass("glyphicon-minus-sign")) {
                 $("#colfinContraVoucherSearch").text("").append("<span class='glyphicon glyphicon-plus-sign'></span>");
@@ -1600,7 +1616,7 @@ function SearchContraVoucher() {
             changeMonth: true,
             dateFormat: "dd-mm-yy",
             yearRange: '-50:+50',
-            onSelect: function(date) {
+            onSelect: function (date) {
                 var date1 = $('#SearchFromDate').datepicker('getDate');
                 var date = new Date(Date.parse(date1));
                 date.setDate(date.getDate() + 1);
@@ -1616,19 +1632,19 @@ function SearchContraVoucher() {
             yearRange: '-50:+50',
             minDate: $("#SearchFromDate").datepicker("getDate")
         });
-        $("#SearchFromDate").keypress(function(event) {
+        $("#SearchFromDate").keypress(function (event) {
             event.preventDefault();
         });
-        $("#SearchToDate").keypress(function(event) {
+        $("#SearchToDate").keypress(function (event) {
             event.preventDefault();
         });
-        setTimeout(function() {
+        setTimeout(function () {
             viewOption("hrms/common/BudgetHead/View", "", "budgetHead", "budgetHead1", "Budget Head");
         }, 300);
-        setTimeout(function() {
+        setTimeout(function () {
             viewOptionIdName("budget/master/FundType/View", "", "description", "fundType1", "Fund Type");
         }, 200);
-        setTimeout(function() {
+        setTimeout(function () {
             fetchLedgerCategoryForReceiptVoucher("", "ledgerCategory1", "Ledger Category");
         }, 400);
         $("#searchpanelRow").append("<br><div id='searchRow3' class='row' />");
@@ -1688,7 +1704,7 @@ function searchContraVoucherFunction() {
                 ToDate: ToDate,
                 voucherNo: voucherNo,
                 filter: JSON.stringify(ddoLocationMap)
-            }).done(function(bdata) {
+            }).done(function (bdata) {
                 if (bdata != null) {
 //
                     $("#listpanelRow").text("").append("<div class='tab-pane' id='viewUser'/>");
@@ -1775,7 +1791,7 @@ function searchContraVoucherFunction() {
 function getDDOforContraVoucher(name, DivId)
 {
     $.get(server_base_url + "financial/common/DDOListForOptions", {
-    }).done(function(pdata) {
+    }).done(function (pdata) {
         if (pdata != null) {
             $("#" + DivId).text("").append("<option value='' selected>---- Select DDO ----</option>");
             if (pdata.length > 0) {

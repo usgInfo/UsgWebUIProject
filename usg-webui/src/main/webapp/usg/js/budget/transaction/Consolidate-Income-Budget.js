@@ -84,7 +84,7 @@ function budgetConsolidateIncomeBudgetmaster(divId) {
 
         $("#panelMainBody").append("<div id='panelRow4' class='row' />");
 
-        $("#panelRow4").append("<div  class='col-xs-12' /><center><button type='button'  value='Save' class='btn btn-success mr5 ' id='createIncomeBudgetButton' onclick='CreateConsolidateExpenseBudgetValidation()'>Create</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' onclick='wipeAllFinancialConsolidateIncomeBudgetCodeData()' class='btn btn-warning mr5 ' name='reset' value='reset'>Reset</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' onclick='searchforIncomeBudget()' class='btn btn-warning mr5' name='reset' value='reset'>Search</button></center></div>");
+        $("#panelRow4").append("<div  class='col-xs-12' /><center><button type='button'  value='Save' class='btn btn-success mr5 ' id='createIncomeBudgetButton' onclick='CreateConsolidateIncomeBudgetValidation()'>Create</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' onclick='wipeAllFinancialConsolidateIncomeBudgetCodeData()' class='btn btn-warning mr5 ' name='reset' value='reset'>Reset</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type='button' onclick='searchforIncomeBudget()' class='btn btn-warning mr5' name='reset' value='reset'>Search</button></center></div>");
 
         getBudgetfinancialyearForConsolidateExpense("financialYear");
         viewReDddoListForList("", "ddo");
@@ -116,8 +116,26 @@ function getAllSrNosForConsolidated(id)
         }
     var Json = JSON.stringify(Json);
     //alert(Json);
+    var department = [];
+    if ($("#department").val() == "")
+    {
+        $("#department option").each(function()
+        {
+            // Add $(this).val() to your list
+
+            if ($(this).val() != "")
+            {
+                department.push($(this).val());
+            }
+
+        });
+    } else
+    {
+        department.push($("#department").val());
+    }
     $.get(server_base_url + "/budget/transaction/IncomeBudget/getAllConsolidatedserNos", {
-        obj: Json
+        obj: Json,
+        department: JSON.stringify(department)
 
     }).done(function(pdata)
     {
@@ -182,7 +200,7 @@ function searchforIncomeBudget() {
         $("#SearchbodyMainBodypanelRow").append("<div id='searchbut' class='form-group' />");
         $("#searchbut").append("<label class='col-sm-5 control-label'></label>");
         $("#searchbut").append("<div id='savesearchButton' class='col-sm-7' />");
-        $("#savesearchButton").append("<button class='btn btn-success mr5 btn-flat' id='SearchIncomeBudgetButton' onclick='validateConsolidateIncomeBudgetSearch()'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp");
+        $("#savesearchButton").append("<button class='btn btn-success mr5 btn-flat' id='ConsolidateSearchIncomeButton' onclick='validateConsolidateIncomeBudgetSearch()'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp");
         $("#savesearchButton").append("<button class='btn btn-warning mr5 btn-flat' onclick='resetConsolidateExpenseBudgetCodeSearch()'>Reset</button>&nbsp&nbsp&nbsp");
         getBudgetfinancialyearForConsolidateExpense("financailYearSearch");
         viewReDddoListForList("", "ddoSearch");
@@ -217,7 +235,7 @@ function fetchAllSec(name, DivId, message) {
 
 }
 
-function CreateConsolidateExpenseBudgetValidation() {
+function CreateConsolidateIncomeBudgetValidation() {
 
     resetOnlySpanErrorsAndSuccessMsgSpecifiedDiv("FieldGroup");
     $("#financialYearErr").text("");
@@ -266,12 +284,12 @@ function CreateConsolidateExpenseBudgetValidation() {
 //        result = 0;
 //    }
     if (result != 0) {
-        viewConsolidateExpenseBudgetCodeList();
+        viewConsolidateIncomeBudgetCodeList();
     }
     //  }
 }
 
-function viewConsolidateExpenseBudgetCodeList(divId)
+function viewConsolidateIncomeBudgetCodeList()
 {
     if (checkUserPrivelege(pvViewBudgetConsolidatedIncome)) {
         var ddo = getUserSessionElement(seDDOId);
@@ -318,6 +336,7 @@ function viewConsolidateExpenseBudgetCodeList(divId)
                 searchObj: JSON.stringify(searchObj),
                 condition: "IncomeBudget"
             }).done(function(bdata) {
+                $("#SearchFormTable").text("");
                 bdata = JSON.parse(bdata);
                 if (bdata == fail) {
                     displayLargeErrorMessagesInCenterInRed("ErrorDiv", noDataAvailable);
@@ -455,7 +474,7 @@ function saveConsolidateExpenseBudgetDetails(saveorsubmit, searchSubmit) {
                     objJson: JSON.stringify(saveThisConsolidateDetails),
                     userid: getUserSessionElement("userId"),
                     financialYear: $('#financialYear').val(),
-                    budgetHead: $('#budgethead').val(),
+                    budgetType: $('#budgetType').val(),
                     fundType: $('#fundType').val(),
                     sector: $('#sector').val()
                 }).done(function(data) {
@@ -531,7 +550,7 @@ function UpdateConExpenseBudgetDetailsInSearch() {
                 } else {
                     displaySuccessMessages("messageDiv", sendMessage, "");
                     setTimeout(function() {
-                        $("#SearchIncomeBudgetButton").click();
+                        $("#ConsolidateSearchIncomeButton").click();
                     }, 3000);
                 }
             });
@@ -610,7 +629,7 @@ function updatebudgetConsolidateExpenseBudget(obj) {
     $("#FieldDiv6").append("<span id='remarksErr'></span>");
 
     $("#panelMainBody").append("<div id='panelRow4' class='row' />");
-    $("#panelRow4").append("<div  class='col-xs-3' /><div class='col-xs-2'><button type='button'  value='Update' class='btn btn-success pull-right mr5' onclick='CreateConsolidateExpenseBudgetValidation()'>Update</button></div><div class='col-xs-2'><button type='button' onclick=budgetConsolidateIncomeBudgetmaster('dashBoardBodyMainDiv') class='btn btn-warning pull-left mr5' name='reset' value='reset'>Back</button></div>");
+    $("#panelRow4").append("<div  class='col-xs-3' /><div class='col-xs-2'><button type='button'  value='Update' class='btn btn-success pull-right mr5' onclick='CreateConsolidateIncomeBudgetValidation()'>Update</button></div><div class='col-xs-2'><button type='button' onclick=budgetConsolidateIncomeBudgetmaster('dashBoardBodyMainDiv') class='btn btn-warning pull-left mr5' name='reset' value='reset'>Back</button></div>");
     scrolupfunction();
 }
 
@@ -919,7 +938,7 @@ function deleteConsolidateIncomeBudget(Id) {
 
                 displaySuccessMessages("ErrorDiv", deleteMessage, "");
                 setTimeout(function() {
-                    $("#SearchIncomeBudgetButton").click();
+                    $("#ConsolidateSearchIncomeButton").click();
                 }, 1000);
             }
         });
@@ -966,10 +985,10 @@ function updateConsolidateBudgetIncome(obj) {
             + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + obj.askedForAmount + "' ></td>");
     $("#listpanelRow").append("<div class='row' id='saveSubmitResetPrintRow12'/>");
     $("#saveSubmitResetPrintRow12").append("<div class='col-sm-12' id='buttonIdofTable'/>");
-    $("#buttonIdofTable").append("<center><button class='btn btn-success mr5 btn-flat'  onclick='UpdateCinsolidateIncomeBudgetRow()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class='btn btn-warning mr5 btn-flat' onclick='goBackToConsolidateSearchFunction()'>Back</button></center>");
+    $("#buttonIdofTable").append("<center><button class='btn btn-success mr5 btn-flat'  onclick='UpdateCinsolidateIncomeBudgetRow()'>Update</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class='btn btn-warning mr5 btn-flat' onclick='goBackToConsolidateIncomeBudgetSearchFunction()'>Back</button></center>");
 }
-function goBackToConsolidateSearchFunction() {
-    $("#SearchIncomeBudgetButton").click();
+function goBackToConsolidateIncomeBudgetSearchFunction() {
+    $("#ConsolidateSearchIncomeButton").click();
 }
 function UpdateCinsolidateIncomeBudgetRow() {
     if (checkUserPrivelege(pvUpdateBudgetConsolidatedIncome)) {
@@ -998,7 +1017,7 @@ function UpdateCinsolidateIncomeBudgetRow() {
             } else if (data == null) {
                 displaySmallErrorMessages("pregsuccessBefore", "No User available" + "<br/><br/>");
             } else {
-                $("#SearchIncomeBudgetButton").click();
+                $("#ConsolidateSearchIncomeButton").click();
                 displaySuccessMessages("messageDiv", updateSuccessMessage, "");
                 clearSuccessMessageAfterTwoSecond("messageDiv");
             }

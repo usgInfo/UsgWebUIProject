@@ -240,7 +240,7 @@ function searchforUniversityBudget() {
         $("#SearchbodyMainBodypanelRow").append("<div id='searchbut' class='form-group' />");
         $("#searchbut").append("<label class='col-sm-5 control-label'></label>");
         $("#searchbut").append("<div id='savesearchButton' class='col-sm-7' />");
-        $("#savesearchButton").append("<button class='btn btn-success mr5 btn-flat' id='SearchIncomeBudgetButton' onclick='validateIncomeUniversityBudgetSearch()'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp");
+        $("#savesearchButton").append("<button class='btn btn-success mr5 btn-flat' id='IncomeBudgetSanctionSearchButton' onclick='validateIncomeUniversityBudgetSearch()'>Search</button>&nbsp&nbsp&nbsp&nbsp&nbsp");
         $("#savesearchButton").append("<button class='btn btn-warning mr5 btn-flat' onclick='ResetIncomeSearchBudgetSanctionAtUniversity()'>Reset</button>&nbsp&nbsp&nbsp");
         getBudgetfinancialyearForIncomeUniversity("financailYearSearch");
         viewReDddoListForList("", "ddoSearch");
@@ -335,6 +335,7 @@ function viewIncomeUniversityBudgetCodeList(divId)
             searchObj: JSON.stringify(searchObj),
             condition: "IncomeBudget"
         }).done(function(bdata) {
+            $("#searchPanel").text("");
             bdata = JSON.parse(bdata);
             if (bdata == fail) {
                 // displayLargeErrorMessagesInCenterInRed("ErrorDiv", noDataAvailable);
@@ -471,11 +472,12 @@ function saveIncomeUniversitySanctionBudgetDetails(saveorsubmit) {
                     objJson: JSON.stringify(saveThisIncomeDetails),
                     userid: id,
                     financialYear: $('#financialYear').val(),
-                    budgetHead: $('#budgethead').val(),
+                    budgetType: $('#budgetType').val(),
                     fundType: $('#fundType').val(),
                     sector: $('#sector').val(),
                     status: saveorsubmit
                 }).done(function(data) {
+//                    $("#tableHeaderTable").text("");
                     if (data == fail) {
                         displaySmallErrorMessages("ErrorDiv", "Invalid username / password" + "<br/><br/>");
                     } else if (data == unauthorized || data.statuscode == unauthorized) {
@@ -497,7 +499,7 @@ function saveIncomeUniversitySanctionBudgetDetails(saveorsubmit) {
                         setTimeout(function() {
                             //createIncomeBudgetButtonSanc
                             $("#viewUserSectionTableDiv").text("");
-                            // $("#SearchIncomeBudgetButton").click();
+                            // $("#IncomeBudgetSanctionSearchButton").click();
                             $(".smallErrorMsg").text("");
                         }, 3000);
                         clearSuccessMessageAfterTwoSecond("ErrorDiv");
@@ -543,7 +545,7 @@ function saveIncomeUniversitySanctionBudgetDetails(saveorsubmit) {
 //                $(".smallErrorMsg").text("");
 //                displaySuccessMessages("messageDiv", sendMessage, "");
 //                setTimeout(function() {
-//                    $("#SearchIncomeBudgetButton").click();
+//                    $("#IncomeBudgetSanctionSearchButton").click();
 //                }, 3000);
 //            }
 //        });
@@ -584,12 +586,12 @@ function updatebudgetIncomeUniversityBudget(obj) {
     $("#saveSubmitResetPrintRow").append("<div class='col-sm-3'></div>");
     $("#saveSubmitResetPrintRow").append("<div class='col-sm-1'></div>");
     $("#saveSubmitResetPrintRow").append("<div class='col-sm-1'><button class='btn btn-success mr5 btn-flat'  onclick='SanctionExpenseBudgetRow()'>Update</button></div>");
-    $("#saveSubmitResetPrintRow").append("<div class='col-sm-1'><button class='btn btn-warning mr5 btn-flat' onclick=goBackToConsolidateSearchFunction() >Back</button></div>");
+    $("#saveSubmitResetPrintRow").append("<div class='col-sm-1'><button class='btn btn-warning mr5 btn-flat' onclick=goBackToIncomeBudgetSancSearchFunction() >Back</button></div>");
     $("#saveSubmitResetPrintRow").append("<div class='col-sm-1'></div>");
 }
 //------------------------------------ Start Back Button------------------------------
-function goBackToConsolidateSearchFunction() {
-    $("#SearchExpenseBudgetButton").click();
+function goBackToIncomeBudgetSancSearchFunction() {
+    $("#IncomeBudgetSanctionSearchButton").click();
 }
 //------------------------------------ End Back Button--------------------------------
 
@@ -623,7 +625,7 @@ function SanctionExpenseBudgetRow() {
             } else {
                 $(".smallErrorMsg").text("");
                 displaySuccessMessages("messageDiv", updateMessage, "");
-                $("#SearchIncomeBudgetButton").click();
+                $("#IncomeBudgetSanctionSearchButton").click();
                 setTimeout(function() {
                     displaySuccessMessages("messageDiv", updateSuccessMessage, "");
                     clearSuccessMessageAfterTwoSecond("messageDiv");
@@ -681,7 +683,7 @@ function UpdateIncomeUniversityBudgetDetailsInSearch() {
                     $(".smallErrorMsg").text("");
                     displaySuccessMessages("messageDiv", sendMessage, "");
                     setTimeout(function() {
-                        $("#SearchIncomeBudgetButton").click();
+                        $("#IncomeBudgetSanctionSearchButton").click();
                         $("#messageDiv").text("").val("");
                     }, 3000);
                 }
@@ -904,7 +906,7 @@ function deleteIncomeSanctionBudget(Id) {
                 $(".smallErrorMsg").text("");
                 displaySuccessMessages("ErrorDiv", deleteMessage, "");
                 setTimeout(function() {
-                    $("#SearchIncomeBudgetButton").click();
+                    $("#IncomeBudgetSanctionSearchButton").click();
                 }, 3000);
             }
         });
@@ -960,7 +962,7 @@ function updateSactionUniversityBudgetExpense(obj) {
 //-------------------------------------------- Back Button Start-----------------------------
 
 function goBackToIncomeSearchFunction() {
-    $("#SearchIncomeBudgetButton").click();
+    $("#IncomeBudgetSanctionSearchButton").click();
 }
 //-------------------------------------------- Back Button End-----------------------------
 
@@ -995,7 +997,7 @@ function UpdateIncomeUniversityBudgetRow() {
             } else {
                 $(".smallErrorMsg").text("");
                 displaySuccessMessages("messageDiv", updateMessage, "");
-                $("#SearchIncomeBudgetButton").click();
+                $("#IncomeBudgetSanctionSearchButton").click();
                 setTimeout(function() {
                 }, 3000);
                 displaySuccessMessages("messageDiv", updateSuccessMessage, "");

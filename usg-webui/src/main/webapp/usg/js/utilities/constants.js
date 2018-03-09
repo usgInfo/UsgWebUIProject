@@ -11,7 +11,7 @@ var updateSuccessMessage = "Successfully Updated.";
 
 var updateMessage = "Successfully Updated.";
 var deleteMessage = "Deleted Successfully.";
-var amountmsg = "Amount Greater Than Approved.";
+var amountmsg = "Approved Amount less than or equal to Sanctioned amount.";
 var fail = "501";
 var delete_map = "502";
 var notAllowed = "405";
@@ -24,7 +24,7 @@ var validateDateValue = "dateValidation";
 
 var delete_map_message = "is already mapped";
 var duplicate_Message = "Duplicate";
-duplicate_MessagsExist = "Already Exists"
+var duplicate_MessagsExist = "Already Exists"
 var failMessage = "Operation failed.";
 var unauthorized = "401";
 var unauthorizedMessage = "You have insufficient privilege to access this feature.";

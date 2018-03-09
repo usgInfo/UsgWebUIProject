@@ -28,21 +28,57 @@ function bankReconcilationEntryCreation(divId) {
         $("#bankReconciliationEntryMainBody").append('<div id="bankReconciliationEntryBodyDiv" class="row" />');
         $("#bankReconciliationEntryBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="fromDate">From Date <span class="require">*</span></label><input type="text" class="form-control" id="fromDate" placeholder="DD/MM/YYYY"></div>'
                 + '<div class="form-group col-lg-6"><label for="toDate">To Date <span class="require">*</span><span id="toDateErr"></span></label><input type="text" class="form-control" id="toDate" placeholder="DD/MM/YYYY"></div></div>');
-        $("#fromDate").datepicker({
-            changeYear: true,
-            changeMonth: true,
-            dateFormat: "dd/mm/yy",
-            yearRange: '-0:+50',
-            minDate: '+0D'
-        });
+//        $("#fromDate").datepicker({
+//            changeYear: true,
+//            changeMonth: true,
+//            dateFormat: "dd/mm/yy",
+//            yearRange: '-0:+50',
+//            minDate: '+0D'
+//        });
+//
+//        $("#toDate").datepicker({
+//            changeYear: true,
+//            changeMonth: true,
+//            dateFormat: "dd/mm/yy",
+//            yearRange: '-0:+50',
+//            minDate: '+0D'
+//        });
+var currentFinancialYear = getUserSessionElement(seCurrentFinancialYear);
+    var toFinacialYear = null;
+    if (currentFinancialYear != null || currentFinancialYear != "" || currentFinancialYear != undefined)
+    {
+        var finyearArray = currentFinancialYear.split("~");
+    }
+    if (finyearArray != null || finyearArray != "" || finyearArray != undefined)
+    {
+        var fromFinacialYear = finyearArray[0];
+        var toFinacialYear = finyearArray[1];
 
-        $("#toDate").datepicker({
+        $("#fromFinancialYear").val(fromFinacialYear);
+        $("#toFinancialYear").val(toFinacialYear);
+
+    }
+    $("#currentFinancialYear").val(currentFinancialYear);
+    $('#fromDate').datepicker({
+        changeYear: true,
+        changeMonth: true,
+        startDate: fromFinacialYear,
+        endDate: toFinacialYear
+    });
+        
+        $('#toDate').datepicker({
             changeYear: true,
             changeMonth: true,
-            dateFormat: "dd/mm/yy",
-            yearRange: '-0:+50',
-            minDate: '+0D'
+            startDate: fromFinacialYear,
+            endDate: toFinacialYear
         });
+        
+    $("#fromDate").keypress(function (event) {
+        event.preventDefault();
+    });
+    $("#toDate").keypress(function (event) {
+        event.preventDefault();
+    });
         $("#bankReconciliationEntryBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="location">Location <span class="require">*</span></label><select class="form-control" name="locationSelect" id="locationSelect"></select>'
                 + '</div><div class="form-group col-lg-6"><label for="ledger">Ledger <span class="require">*</span></label><select class="form-control" id="ledgerSelect"></select></div></div>');
         $("#bankReconciliationEntryBodyDiv").append('<div class="col-lg-12"><div class="form-group col-lg-6"><label for="status">Status <span class="require">*</span></label><select class="form-control" name="locationSelect" id="statusSelect"><option value="0">----Select Status----</option><option>All Entries</option><option>Cleared Entries</option><option>Uncleared Entries</option></select></div></div>');

@@ -347,6 +347,7 @@ function viewExtraProvisionExpenseList(divId)
         searchObj: JSON.stringify(searchObj),
         condition: "IncomeBudget"
     }).done(function(bdata) {
+        $("#searchPanel").text("");
         bdata = JSON.parse(bdata);
         if (bdata == fail) {
         } else if (bdata == unauthorized || bdata.statuscode == unauthorized) {
@@ -361,7 +362,7 @@ function viewExtraProvisionExpenseList(divId)
                     for (var i = bdata.length - 1; i >= 0; i--) {
                         var result = 1;
                         var extraProvisionAmount = 0;
-                        var totalAmount = 0;
+                        var totalAmount = bdata[i].sanctionedAmount;
                         if (bdata[i].extraProvisionAmount == "undefined" && bdata[i].extraProvisionAmount == null)
                         {
                             extraProvisionAmount = bdata[i].extraProvisionAmount;
@@ -410,12 +411,12 @@ function viewExtraProvisionExpenseList(divId)
             var sanc = row.find('td:eq(3)').find('input').val();
             var extra = row.find('td:eq(4)').find('input').val();
 
-            if (!isNaN(extra) && extra.length != 0 && extra != undefined) {
+            if (!isNaN(extra) && extra != undefined) {
                 extra = parseFloat(extra);
                 sanc = parseFloat(sanc);
             }
 
-            if (extra > 0 && extra > 0) {
+            if (sanc > 0) {
                 var present = (extra + sanc);
                 row.find('td:eq(5)').find('input').val(present);
 
@@ -813,7 +814,7 @@ function SubmitExtraProvisionExpense() {
             objJson: JSON.stringify(saveThisConsolidateDetails),
             userid: userid
         }).done(function(data) {
-
+            $("#tableHeaderTable").text("");
             if (data == fail) {
                 displaySmallErrorMessagesInRed("messageDiv", "Invalid username / password" + "<br/><br/>");
             } else if (data == unauthorized || data.statuscode == unauthorized) {

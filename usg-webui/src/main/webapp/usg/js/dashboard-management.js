@@ -276,13 +276,13 @@ function prepareBody() {
         $("#widgetMainDiv").append('<div id="widgetMainDivThird1" onclick="displayUserManagement()" />');
         $("#widgetMainDivThird1").append('<img class="img-responsive" src="../images/user-management.png">');
     }
-    $("#widgetMainDivId3").append('<div class="col-sm-6 col-md-4" id="widgetMainDiv5" />');
-    $("#widgetMainDiv5").append('<div id="widgetMainDivThird2" onclick="displayExaminationModule()" />');
-    $("#widgetMainDivThird2").append('<img class="img-responsive" src="../images/user-management.png">');
+//    $("#widgetMainDivId3").append('<div class="col-sm-6 col-md-4" id="widgetMainDiv5" />');
+//    $("#widgetMainDiv5").append('<div id="widgetMainDivThird2" onclick="displayExaminationModule()" />');
+//    $("#widgetMainDivThird2").append('<img class="img-responsive" src="../images/user-management.png">');
 
-    $("#widgetMainDivId3").append('<div class="col-sm-6 col-md-4" id="widgetMainDiv6" />');
-    $("#widgetMainDiv6").append('<div id="widgetMainDivThird3" onclick="displayAdmissionModule()" />');
-    $("#widgetMainDivThird3").append('<img class="img-responsive" src="../images/user-management.png">');
+//    $("#widgetMainDivId3").append('<div class="col-sm-6 col-md-4" id="widgetMainDiv6" />');
+//    $("#widgetMainDiv6").append('<div id="widgetMainDivThird3" onclick="displayAdmissionModule()" />');
+//    $("#widgetMainDivThird3").append('<img class="img-responsive" src="../images/user-management.png">');
 //    if (((checkUserPrivelege(pvCreateUser)) || (checkUserPrivelege(pvViewUserList)))) {
 //        //User Management
 //        $("#widgetMainDivId3").append('<div class="col-sm-6 col-md-4" id="widgetMainDiv" />');

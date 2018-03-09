@@ -140,6 +140,7 @@ function showBudgetHeadsdeptWise()
         displaySmallErrorMessages("departmentErr", "Please SelectDepartment.");
         result = 0;
     }
+
     if (result != 0) {
         DeptWisebudgetHeadsList();
 
@@ -175,6 +176,7 @@ function DeptWisebudgetHeadsList()
     $("#displayBankTable").append("<thead class=''><tr>"
             + " <th style='min-width:40%;width:auto;'><i ></i> S.No</th>"
             + "<th style='min-width:40%;width:auto;'><i ></i>Ledger</th>"
+            + "<th style='min-width:40%;width:auto;'><i ></i>Budget Head</th>"
             + "<th style='min-width:30%;width:auto;'><i ></i>Requested Amount(In Lacs)</th>"
             + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
             + "<th style='min-width:30%;width:auto;'><i ></i>Sanction Amount(In Lacs)</th>"
@@ -191,10 +193,10 @@ function DeptWisebudgetHeadsList()
         department: department
     };
     $.get(server_base_url + "Budget/IncomeBudget/SearchLedgersbasedOnHeads", {
-        searchObj: JSON.stringify(searchObj)
+        searchObj: JSON.stringify(searchObj),
+        empid: getUserSessionElement(seLoggedInEmployeeId)
     }).done(function(bdata) {
-
-        bdata = JSON.parse(bdata);
+        $("#pregsuccessBefore").text("");
         if (bdata == fail) {
             displayLargeErrorMessagesInCenterInRed("pregsuccessBefore", noDataAvailable);
         } else if (bdata == unauthorized || bdata.statuscode == unauthorized) {
@@ -203,23 +205,38 @@ function DeptWisebudgetHeadsList()
             callSessionTimeout();
         } else if (bdata == statusException) {
             displayLargeErrorMessagesInCenterInRed("pregsuccessBefore", noDataAvailable);
+        }
+        else if (bdata == "DepartmentFirst") {
+            displayLargeErrorMessagesInCenterInRed("pregsuccessBefore", "Please Allocate Budget to Your Department");
         } else {
+            bdata = JSON.parse(bdata);
             if (bdata != null) {
                 var amount = 0;
                 if (bdata.length > 0) {
                     var sno = 0;
+                    var j = 0;
                     $("#displayBankTable").append("<tbody id='displayBankTableBody' class='table-striped table-bclased' />");
                     for (var i = 0; i < bdata.length; i++) {
-                        sno++;
-                        // alert("----bdata[i].financalYear----------"+bdata[i].financalYear);
-                        var objJson = JSON.stringify(bdata[i]);
-                        $("#displayBankTableBody").append("<tr id='" + bdata[i].status + "' style='cursor:pointer;' >"
-                                + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
-                                + "<td style='cursor:pointer;'>" + bdata[i].ledger + "</td>"
-                                + "<td style='cursor:pointer;'>" + bdata[i].requestedAmount + "</td>"
-                                + "<td style='cursor:pointer;'>" + bdata[i].sanctionedAmount + "</td>"
-                                + "<td style='cursor:pointer;'><input type='text' name='approveAmout' id='approveAmout" + i + "' value='" + amount + "' onchange=validateDeptSanctnAmount('" + bdata[i].sanctionedAmount + "','" + i + "') onkeypress='return validateNumber(event)' ><div id='error" + i + "'></div></td></tr>");
+                        if (bdata[i].requestedAmount != 0)
+                        {
 
+                            sno++;
+                            var sanamt = bdata[i].sanctionedAmount;
+                            if (sanamt == undefined || sanamt == null)
+                            {
+                                sanamt = 0;
+                            }
+                            // alert("----bdata[i].financalYear----------"+bdata[i].financalYear);
+                            var objJson = JSON.stringify(bdata[i]);
+                            $("#displayBankTableBody").append("<tr id='" + bdata[i].status + "' style='cursor:pointer;' >"
+                                    + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
+                                    + "<td style='cursor:pointer;'>" + bdata[i].ledger + "</td>"
+                                    + "<td style='cursor:pointer;'>" + bdata[i].budgetHeadName + "</td>"
+                                    + "<td style='cursor:pointer;'>" + bdata[i].requestedAmount + "</td>"
+                                    + "<td style='cursor:pointer;'>" + sanamt + "</td>"
+                                    + "<td style='cursor:pointer;'><input type='text' name='approveAmout' id='approveAmout" + j + "' value='" + amount + "' onchange=validateDeptSanctnAmount('" + bdata[i].sanctionedAmount + "','" + j + "') onkeypress='return validateNumber(event)' ><div id='error" + j + "'></div></td></tr>");
+                            j++;
+                        }
                     }
                     $("#displayBankTable").DataTable({
                         paging: true
@@ -246,7 +263,7 @@ function  validateDeptSanctnAmount(sanctionedAmount, i)
     //alert(sanctionedAmount);
     if (parseInt(SanValue) > parseInt(sanctionedAmount))
     {
-        displaySmallErrorMessages("error" + i, "Sanction amount must be less than approved amount.");
+        displaySmallErrorMessages("error" + i, "Sanction amount must be less than or equal to approved amount.");
     }
 
 
@@ -261,7 +278,7 @@ function validateDeptBeforeSave()
         var row = $(rows[i]);
         $("#error" + i).text("");
         var SanValue = $("#approveAmout" + i).val();
-        var sanctionedAmount = row.find('td:eq(3) ').text();
+        var sanctionedAmount = row.find('td:eq(4) ').text();
         if (SanValue == "")
         {
             displaySmallErrorMessages("error" + i, "Please Enter Sanction amount .");
@@ -269,12 +286,11 @@ function validateDeptBeforeSave()
         }
         if (SanValue != "")
         {
-
             if (parseInt(SanValue) > parseInt(sanctionedAmount))
             {
 
                 result = "false";
-                displaySmallErrorMessages("error" + i, "Sanction amount must be less than approved amount.");
+                displaySmallErrorMessages("error" + i, "Sanction amount must be less than or equal to approved amount.");
             }
         }
         //  $(this).closest('tr').remove();  
@@ -314,7 +330,7 @@ function saveDeptBudgetApprove()
             ledgerId: budgetIncomeDetails.ledgerId,
             prievioueBudget: budgetIncomeDetails.prievioueBudget,
             consolidatedIncomeId: budgetIncomeDetails.consolidatedIncomeId,
-            sanctionAmount: row.find('td:eq(4) input').val(),
+            sanctionAmount: row.find('td:eq(5) input').val(),
             budgetIncomeSanctionId: budgetIncomeDetails._id.$oid,
             approvedAmount: budgetIncomeDetails.sanctionedAmount,
             department: $("#department").val()
@@ -329,7 +345,8 @@ function saveDeptBudgetApprove()
         var id = getUserSessionElement("userId");
         $.post(server_base_url + "Budget/budgetTrans/SaveDeptWiseIncBudgetAlloc", {
             objJson: JSON.stringify(saveThisConsolidateDetails),
-            userid: id
+            userid: id,
+            empid: getUserSessionElement(seLoggedInEmployeeId)
         }).done(function(data) {
             if (data == fail) {
                 displaySmallErrorMessages("pregsuccessBefore", "Invalid username / password" + "<br/><br/>");
@@ -457,39 +474,75 @@ function validateIncomeDeptBudgetSearch() {
                 bdata = JSON.parse(bdata);
                 if (bdata != null) {
                     if (bdata.length > 0) {
-                        $("#displayBankTable").append("<thead class=''><tr>"
-                                //    + " <th> Select</th>"
-                                + " <th> S.No</th>"
-                                + "<th style='min-width:30%;width:auto;'><i ></i>Ledger </th>"
-                                + "<th style='min-width:30%;width:auto;'><i ></i>Date</th>"
-                                + "<th style='min-width:30%;width:auto;'><i ></i>Asked Amount(In Lacs)</th>"
-                                + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
-                                + "<th style='min-width:30%;width:auto;'><i ></i>Extra Provision Amount(In Lacs)</th>"
+                        if (bdata[0].budgetTypeName == "Estimated")
+                        {
+                            $("#displayBankTable").append("<thead class=''><tr>"
+                                    //    + " <th> Select</th>"
+                                    + " <th> S.No</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Ledger </th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Date</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Asked Amount(In Lacs)</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Extra Provision Amount(In Lacs)</th>"
 //                            + "<th style='min-width:1%;width:80px;'><i ></i>Edit</th>"
 //                            + "<th style='min-width:1%;width:80px;'><i ></i>Delete</th>"
-                                + "</tr></thead>");
-                        var sno = 0;
-                        $("#displayBankTable").append("<tbody id='displayBankTableBody' class='table-striped table-bclased' />");
-                        for (var i = bdata.length - 1; i >= 0; i--) {
-                            var extraProvision = bdata[i].extraProvisionAmount;
-                            if (extraProvision == undefined || extraProvision == "undefined") {
-                                extraProvision = "0";
+                                    + "</tr></thead>");
+                            var sno = 0;
+                            $("#displayBankTable").append("<tbody id='displayBankTableBody' class='table-striped table-bclased' />");
+                            for (var i = bdata.length - 1; i >= 0; i--) {
+                                var extraProvision = bdata[i].extraProvisionAmount;
+                                if (extraProvision == undefined || extraProvision == "undefined") {
+                                    extraProvision = "0";
+                                }
+                                sno++;
+                                var objJson = JSON.stringify(bdata[i]);
+                                $("#displayBankTableBody").append("<tr id='" + bdata[i]._id.$oid + "' style='cursor:pointer;' >"
+                                        //    + "<td><input type='checkbox' value='" + bdata[i]._id.$oid + "' name='case'></td>"
+                                        + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
+                                        + "<td style='cursor:pointer;'>" + bdata[i].ledger + "<input type='hidden' value='" + bdata[i]._id.$oid + "'></td>"
+                                        + "<td style='cursor:pointer;'>" + bdata[i].budgetDate + "</td>"
+                                        + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].requestedAmount + "' readonly></td>"
+                                        + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + bdata[i].sanctionAmount + "' readonly></td>"
+                                        + "<td style='cursor:pointer;'><input type='text' value='" + extraProvision + "' readonly></td></tr>");
+                                //    + "<td style='cursor:pointer;' onclick=updateSactionUniversityBudgetExpense('" + encodeURI(objJson) + "')>" + ' <i class="fa fa-edit"></i>&nbsp;&nbsp;<a  class="anchor_edit" style="margin-width:1%,width:80px" >Edit</a>' + "</td>"
+                                //    + "<td onclick=deletePopUp('deleteIncomeSanctionBudget','nothingToDo','" + bdata[i]._id.$oid + "')>" + ' <i class="fa fa-trash-o"></i>&nbsp;&nbsp;<a  class="anchor_delete" style="margin-width:1%,width:80px" >Delete</a>' + "</td></tr>");
+
                             }
-                            sno++;
-                            var objJson = JSON.stringify(bdata[i]);
-                            $("#displayBankTableBody").append("<tr id='" + bdata[i]._id.$oid + "' style='cursor:pointer;' >"
-                                    //    + "<td><input type='checkbox' value='" + bdata[i]._id.$oid + "' name='case'></td>"
-                                    + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
-                                    + "<td style='cursor:pointer;'>" + bdata[i].ledger + "<input type='hidden' value='" + bdata[i]._id.$oid + "'></td>"
-                                    + "<td style='cursor:pointer;'>" + bdata[i].budgetDate + "</td>"
-                                    + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].requestedAmount + "' readonly></td>"
-                                    + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + bdata[i].sanctionAmount + "' readonly></td>"
-                                    + "<td style='cursor:pointer;'><input type='text' value='" + extraProvision + "' readonly></td></tr>");
-                            //    + "<td style='cursor:pointer;' onclick=updateSactionUniversityBudgetExpense('" + encodeURI(objJson) + "')>" + ' <i class="fa fa-edit"></i>&nbsp;&nbsp;<a  class="anchor_edit" style="margin-width:1%,width:80px" >Edit</a>' + "</td>"
-                            //    + "<td onclick=deletePopUp('deleteIncomeSanctionBudget','nothingToDo','" + bdata[i]._id.$oid + "')>" + ' <i class="fa fa-trash-o"></i>&nbsp;&nbsp;<a  class="anchor_delete" style="margin-width:1%,width:80px" >Delete</a>' + "</td></tr>");
+                        } else
+                        {
+                            $("#displayBankTable").append("<thead class=''><tr>"
+                                    //    + " <th> Select</th>"
+                                    + " <th> S.No</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Ledger </th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Date</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Asked Amount(In Lacs)</th>"
+                                    + "<th style='min-width:30%;width:auto;'><i ></i>Approved Amount(In Lacs)</th>"
 
+//                            + "<th style='min-width:1%;width:80px;'><i ></i>Edit</th>"
+//                            + "<th style='min-width:1%;width:80px;'><i ></i>Delete</th>"
+                                    + "</tr></thead>");
+                            var sno = 0;
+                            $("#displayBankTable").append("<tbody id='displayBankTableBody' class='table-striped table-bclased' />");
+                            for (var i = bdata.length - 1; i >= 0; i--) {
+                                var extraProvision = bdata[i].extraProvisionAmount;
+                                if (extraProvision == undefined || extraProvision == "undefined") {
+                                    extraProvision = "0";
+                                }
+                                sno++;
+                                var objJson = JSON.stringify(bdata[i]);
+                                $("#displayBankTableBody").append("<tr id='" + bdata[i]._id.$oid + "' style='cursor:pointer;' >"
+                                        //    + "<td><input type='checkbox' value='" + bdata[i]._id.$oid + "' name='case'></td>"
+                                        + "<td>" + sno + "<input type='hidden' value='" + encodeURI(objJson) + "'></td>"
+                                        + "<td style='cursor:pointer;'>" + bdata[i].ledger + "<input type='hidden' value='" + bdata[i]._id.$oid + "'></td>"
+                                        + "<td style='cursor:pointer;'>" + bdata[i].budgetDate + "</td>"
+                                        + "<td style='cursor:pointer;'><input type='text' value='" + bdata[i].requestedAmount + "' readonly></td>"
+                                        + "<td style='cursor:pointer;'><input type='text' onkeypress='return validate(event)' value='" + bdata[i].sanctionAmount + "' readonly></td></tr>");
+//                                    + "<td style='cursor:pointer;'><input type='text' value='" + extraProvision + "' readonly></td></tr>");
+                                //    + "<td style='cursor:pointer;' onclick=updateSactionUniversityBudgetExpense('" + encodeURI(objJson) + "')>" + ' <i class="fa fa-edit"></i>&nbsp;&nbsp;<a  class="anchor_edit" style="margin-width:1%,width:80px" >Edit</a>' + "</td>"
+                                //    + "<td onclick=deletePopUp('deleteIncomeSanctionBudget','nothingToDo','" + bdata[i]._id.$oid + "')>" + ' <i class="fa fa-trash-o"></i>&nbsp;&nbsp;<a  class="anchor_delete" style="margin-width:1%,width:80px" >Delete</a>' + "</td></tr>");
+
+                            }
                         }
-
                         $('#displayBankTable').datatable();
                     } else {
                         displayLargeErrorMessagesInCenterInRed("messageDiv", noDataAvailable);

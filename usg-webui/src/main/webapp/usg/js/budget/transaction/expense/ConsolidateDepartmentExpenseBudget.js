@@ -89,7 +89,7 @@ function ConsolidateDepartmentExpenseBudget(divId) {
         getTwoColumnInRow("FieldGroup4", "Row5", "Row5Col1", "Row5Col2");
         $("#Row5Col1").append(getLabel("Previous Budget", "") + "" + getDropDown("previousBudget", "", "", ""));
         document.getElementById("previousBudget").disabled = true;
-        $("#budgetType").attr("onchange", " getAllSrNosForConsolidated('previousBudget')");
+        $("#budgetType").attr("onchange", " getAllSrNosForConsolidatedDeptExp('previousBudget')");
 
         $("#panelMainBody").append("<div id='panelRow4' class='row' />");
 
@@ -103,6 +103,71 @@ function ConsolidateDepartmentExpenseBudget(divId) {
         //  viewOption("/hrms/common/BudgetHead/View", "", "budgetHead", "budgethead", "Budget Head");
         viewOption("budget/master/BudgetType/View", "", "description", "budgetType", "Budget Type");
     }
+
+}
+function getAllSrNosForConsolidatedDeptExp(id)
+{
+    var fundType = $("#fundType").val();
+    var sector = $("#sector").val();
+    var location = $("#location").val();
+    var finYear = $("#financialYear").val();
+    var budgetType = $("#budgetType").val();
+    var ddo = $("#ddo").val();
+    $("#" + id).val("");
+    $("#previousBudget").val("");
+    var Json = {
+        sector: sector,
+        fundType: fundType,
+        budgetType: budgetType,
+        financialYear: finYear,
+        location: location,
+        ddo: ddo
+    }
+    var department = [];
+    if ($("#department").val() == "")
+    {
+        $("#department option").each(function()
+        {
+            // Add $(this).val() to your list
+
+            if ($(this).val() != "")
+            {
+                department.push($(this).val());
+            }
+
+        });
+    } else
+    {
+        department.push($("#department").val());
+    }
+    var Json = JSON.stringify(Json);
+    $.get(server_base_url + "/GetPreviousBudgetNosInConsolidateExpenseDept", {
+        obj: Json,
+        department: JSON.stringify(department)
+
+    }).done(function(pdata)
+    {
+        if (pdata != null)
+        {
+            $("#" + id).text("");
+            //alert(pdata);
+            if (pdata == null || pdata == "" || pdata == 500 || pdata == 501)
+            {
+                document.getElementById(id).disabled = true;
+                // $("#"+ id).text("").append("<option >" + NoDataFound + "</option>");
+            } else
+            {
+                $("#" + id).text("");
+                $("#" + id).text("").append("<option >---------- Previous Budgets-------</option>");
+                for (var i = 0; i < pdata.length; i++)
+                {
+                    document.getElementById(id).disabled = false;
+                    $("#" + id).append("<option value='" + pdata[i]._id.$oid + "'>" + pdata[i].srNo + "</option>");
+
+                }
+            }
+        }
+    });
 
 }
 function consolidateDeptexpenseBudgetValidation() {
@@ -396,6 +461,7 @@ function validateConsolidateDeptExpenseSearch(previousSearchJson) {
 }
 function viewConsolidateDepartmentExpense(divId)
 {
+
     if (checkUserPrivelege(pvViewBudgetConsolidatedIncome)) {
         var ddo = $("#ddo").val();
         var financialYear = $("#financialYear").val();
@@ -461,6 +527,7 @@ function viewConsolidateDepartmentExpense(divId)
                 condition: "IncomeBudget",
                 department: JSON.stringify(department)
             }).done(function(bdata) {
+                $("#SearchFormTable").text("");
                 bdata = JSON.parse(bdata);
                 if (bdata == fail) {
                     displayLargeErrorMessagesInCenterInRed("ErrorDiv", noDataAvailable);
@@ -595,7 +662,7 @@ function saveConsolidateDeptExpense(saveorsubmit, searchSubmit) {
                     objJson: JSON.stringify(saveThisConsolidateDetails),
                     userid: getUserSessionElement("userId"),
                     financialYear: $('#financialYear').val(),
-                    budgetHead: $('#budgethead').val(),
+                    budgetType: $('#budgetType').val(),
                     fundType: $('#fundType').val(),
                     sector: $('#sector').val(),
                     department: $('#department').val()

@@ -116,8 +116,8 @@ function validateBudgetReport()
 }
 function loadBudgetReportPdf() {
     if (checkUserPrivelege(pvBudgetReportView)) {
-        var ddo = $("#ddo").prop('selectedIndex') > 0 ? $("#ddo").val() : "";
-        var location = $("#location").prop('selectedIndex') > 0 ? $("#location").val() : "";
+        var ddo = $("#ddo").val();
+        var location = $("#location").val();
         var financialYearId = $("#financialYear").prop('selectedIndex') > 0 ? $("#financialYear").val() : "";
         var fundType = $("#fundType").prop('selectedIndex') > 0 ? $("#fundType").val() : "";
         var sector = $("#sector").prop('selectedIndex') > 0 ? $("#sector").val() : "";
