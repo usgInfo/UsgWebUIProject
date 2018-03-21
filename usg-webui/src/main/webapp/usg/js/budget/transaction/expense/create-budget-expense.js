@@ -365,7 +365,8 @@ function viewAllBudgetExpense(divId) {
                             $("#budgetIncomeSubDiv3").append("<div  class='col-xs-3' /><div class='col-xs-2'></div>"
                                     + "<div class='col-xs-2'><button type='button'  value='send' class='btn btn-success pull-right mr5' style=''  onclick='sendExpenseBudget()'>Send</button></div>");
                             $("#budgetIncomeTable").DataTable({
-                                paging: true
+                                paging: true,
+                                "bDestroy": true
                             });
                         }
                     }

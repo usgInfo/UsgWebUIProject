@@ -563,9 +563,9 @@ function budgetHeadsList()
                                     + "<td style='cursor:pointer;'><input type='text' name='approveAmout' value=" + amount + " id='approveAmout" + i + "' onchange=validateSanctnAmount('" + sanctionedAMT + "','" + i + "') onkeypress='return validateNumber(event)' ><div id='error" + i + "'></div></td></tr>");
 
                         }
-                        $("#displayBankTable").DataTable({paging: true});
+                        $("#displayBankTable").DataTable({paging: true, "bDestroy": true});
                         $("#viewList").append("<div id='panelRow8' class='row' />");
-                        $("#panelRow8").append("<div  class='col-xs-3' />\n\<div class='col-xs-2'>\n\ <button type='button'  value='Preview' class='btn btn-success  pull-right mr5'onclick='validateBeforeSave()'>Save</button></div><div class='col-xs-2'><button type='button' onclick=resetAllValuesInSpecifiedDiv('listPanel') class='btn btn-warning pull-left mr5' name='reset' value='reset'>Reset</button></div> \n\</div>");
+                        $("#panelRow8").append("<div  class='col-xs-3' />\n\<div class='col-xs-2'>\n\ <button type='button' id='saveButton' value='Preview' class='btn btn-success  pull-right mr5'onclick='validateBeforeSave()'>Save</button></div><div class='col-xs-2'><button type='button' onclick=resetAllValuesInSpecifiedDiv('listPanel') class='btn btn-warning pull-left mr5' name='reset' value='reset'>Reset</button></div> \n\</div>");
                         // $('#displayBankTable').dataTable();
 
                     }
@@ -638,6 +638,7 @@ function saveBudgetApprove()
         {
             department.push($("#department").val());
         }
+        $("#saveButton").attr("disabled", true);
         for (var i = 0; i < rows.length; i++)
         {
             var row = $(rows[i]);

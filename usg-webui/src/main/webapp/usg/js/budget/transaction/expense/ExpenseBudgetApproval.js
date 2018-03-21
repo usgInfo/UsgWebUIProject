@@ -516,14 +516,14 @@ function viewBudgetHeadsforapprovalExpensiveBudget()
                                 + "<td style='cursor:pointer;')>" + ' <input type="text"  style="min-width:1%;width:80px;" name="approveAmout" value=' + amount + ' id="approveAmout" onchange = validateSanctnAmount("' + pdata[i].sanctionedAmount + '", "' + i + '") onkeypress = "return validateNumber(event)"/></td></tr>');
 
                     }
-                    $("#approvalexpensebudgetheadstable").DataTable({paging: true});
+                    $("#approvalexpensebudgetheadstable").DataTable({paging: true, "bDestroy": true});
                 }
             }
         });
         $("#budgetIncomepanelMainBody").append("<div id='approvalbudgetheadButtonId' class='form-group' />");
         $("#approvalbudgetheadButtonId").append("<label class='col-sm-3 control-label'></label>");
         $("#approvalbudgetheadButtonId").append("<div id='approvalbudgetheadsaveButton' class='col-sm-9' />");
-        $("#approvalbudgetheadsaveButton").append("<button class='btn btn-success mr5 btn-flat' onclick='saveExpenseBudgetApprovalvalidation()'>Save</button>&nbsp&nbsp&nbsp");
+        $("#approvalbudgetheadsaveButton").append("<button class='btn btn-success mr5 btn-flat' id='saveButton' onclick='saveExpenseBudgetApprovalvalidation()'>Save</button>&nbsp&nbsp&nbsp");
         $("#approvalbudgetheadsaveButton").append("<button class='btn btn-warning mr5 btn-flat' onclick='resetExpenseBudgetApprovalList()'>Reset</button>&nbsp&nbsp&nbsp");
     }
 }
@@ -572,6 +572,7 @@ function saveExpenseBudgetApprovalvalidation()
 function saveExpenseBudgetApproval()
 {
     if (checkUserPrivelege(pvViewBudgetApprovalDDO)) {
+          $("#saveButton").attr("disabled", true);
         var result = 1;
         var budgetheads = [];
         var rows = $("#approvalexpensebudgetheadstable").dataTable().fnGetNodes();

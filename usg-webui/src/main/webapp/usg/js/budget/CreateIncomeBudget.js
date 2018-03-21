@@ -480,7 +480,7 @@ function viewAllIncomeBudget(divId) {
                                 }
                             }
                         }
-                        $("#budgetIncomeTable").DataTable({paging: true});
+                        $("#budgetIncomeTable").DataTable({paging: true, "bDestroy": true});
 
                         $("#viewList").append("<div id='budgetIncomeSubDiv3' class='row'>");
                         $("#budgetIncomeSubDiv3").append("<div  class='col-xs-3' /><div class='col-xs-2'></div>"

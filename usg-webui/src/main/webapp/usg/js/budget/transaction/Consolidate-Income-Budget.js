@@ -393,7 +393,7 @@ function viewConsolidateIncomeBudgetCodeList()
                                 var submit = "Submit";
                                 if (checkUserPrivelege(pvCreateBudgetConsolidatedIncome)) {
                                     $("#listpanelRow").append("<div class='row' id='saveSubmitResetPrintRow'/>");
-                                    $("#saveSubmitResetPrintRow").append('<center><button type="button"  value="Save" class="btn btn-success mr5 btn-flat"  onclick=saveConsolidateExpenseBudgetDetails("' + save + '")>Save</button>&nbsp;&nbsp;&nbsp;<button name="reset" value="reset" type="button" class="btn btn-warning mr5" onclick=resetTextFieldsofTable("displayBankTable","5")>Reset</button></center>');
+                                    $("#saveSubmitResetPrintRow").append('<center><button type="button" id="saveButton" value="Save" class="btn btn-success mr5 btn-flat"  onclick=saveConsolidateExpenseBudgetDetails("' + save + '")>Save</button>&nbsp;&nbsp;&nbsp;<button name="reset" value="reset" type="button" class="btn btn-warning mr5" onclick=resetTextFieldsofTable("displayBankTable","5")>Reset</button></center>');
 
                                 }
                             }
@@ -430,7 +430,7 @@ function saveConsolidateExpenseBudgetDetails(saveorsubmit, searchSubmit) {
 
         if (status == "false")
         {
-
+            $("#saveButton").attr("disabled", true);
             var result = 1;
             var saveThisConsolidateDetails = [];
             var rows = $("#displayBankTable").dataTable().fnGetNodes();
